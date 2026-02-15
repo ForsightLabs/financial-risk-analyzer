@@ -1,0 +1,13 @@
+user_id,name,email,phone,account_number,credit_score,credit_score_status,status,total_assets,total_liabilities,total_debt,net_worth,monthly_income,monthly_expenses,risk_score,risk_percentage,stress_level,date_joined,last_updated
+USR-001,Aryan Mehta,aryan.mehta@email.com,+91 9876543210,ACC123456789,650,Fair,Critical,450000,380000,250000,70000,45000,52000,Critical,85,High Stress,2019-03-15,2026-02-15 10:30:00
+USR-002,Priya Nair,priya.nair@email.com,+91 9876543211,ACC123456790,720,Good,High,850000,320000,150000,530000,75000,68000,High,65,Medium Stress,2020-01-20,2026-02-15 09:15:00
+USR-003,Karan Patel,karan.patel@email.com,+91 9876543212,ACC123456791,780,Excellent,Low,1200000,200000,80000,1000000,95000,45000,Low,20,Low Stress,2018-06-10,2026-02-15 08:00:00
+USR-004,Divya Krishnan,divya.k@email.com,+91 9876543213,ACC123456792,690,Fair,High,520000,420000,180000,100000,55000,58000,High,70,High Stress,2019-11-05,2026-02-15 11:45:00
+USR-005,Rohit Singh,rohit.singh@email.com,+91 9876543214,ACC123456793,710,Good,Medium,680000,280000,120000,400000,62000,48000,Medium,45,Medium Stress,2020-07-22,2026-02-15 10:00:00
+USR-006,Ananya Das,ananya.das@email.com,+91 9876543215,ACC123456794,790,Excellent,Low,1500000,150000,50000,1350000,110000,40000,Low,15,Low Stress,2017-02-14,2026-02-15 07:30:00
+USR-007,Vikram Joshi,vikram.j@email.com,+91 9876543216,ACC123456795,640,Fair,Critical,380000,450000,280000,-70000,42000,55000,Critical,90,High Stress,2020-09-30,2026-02-15 12:00:00
+USR-008,Meera Pillai,meera.p@email.com,+91 9876543217,ACC123456796,700,Good,Medium,720000,310000,140000,410000,68000,52000,Medium,50,Medium Stress,2019-05-18,2026-02-15 09:45:00
+USR-009,Suresh Reddy,suresh.reddy@email.com,+91 9876543218,ACC123456797,800,Excellent,Low,1800000,180000,60000,1620000,125000,48000,Low,12,Low Stress,2016-08-25,2026-02-15 08:30:00
+USR-010,Kavita Sharma,kavita.s@email.com,+91 9876543219,ACC123456798,675,Fair,High,490000,390000,200000,100000,52000,60000,High,72,High Stress,2020-03-12,2026-02-15 10:15:00
+USR-011,Aditya Kumar,aditya.k@email.com,+91 9876543220,ACC123456799,785,Excellent,Low,1350000,220000,90000,1130000,98000,42000,Low,18,Low Stress,2018-11-08,2026-02-15 07:00:00
+USR-012,Neha Gupta,neha.gupta@email.com,+91 9876543221,ACC123456800,695,Good,Medium,650000,295000,130000,355000,64000,50000,Medium,48,Medium Stress,2019-07-29,2026-02-15 09:00:00

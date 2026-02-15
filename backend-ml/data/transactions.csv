@@ -1,0 +1,121 @@
+customer_user_id,transaction_date,description,amount,type,category
+USR-001,2026-02-14,Salary Credit,45000,credit,Salary
+USR-001,2026-02-12,EMI Payment - Home Loan,-15000,debit,EMI
+USR-001,2026-02-10,Grocery Shopping - BigBasket,-3500,debit,Food
+USR-001,2026-02-08,Electricity Bill Payment,-2500,debit,Utilities
+USR-001,2026-02-05,ATM Withdrawal,-5000,debit,Cash
+USR-001,2026-02-03,Quick Loan App Transfer,-8000,debit,Lending
+USR-001,2026-01-30,Medical Emergency - Apollo,-12000,debit,Health
+USR-001,2026-01-25,Credit Card Bill Payment,-6500,debit,Credit Card
+USR-001,2026-01-20,Online Shopping - Amazon,-4200,debit,Shopping
+USR-001,2026-01-15,Salary Credit,45000,credit,Salary
+USR-002,2026-02-14,Salary Credit,75000,credit,Salary
+USR-002,2026-02-13,Rent Payment,-25000,debit,Rent
+USR-002,2026-02-11,Grocery Shopping,-5500,debit,Food
+USR-002,2026-02-09,Car EMI Payment,-18000,debit,EMI
+USR-002,2026-02-07,Mutual Fund Investment,-10000,debit,Investment
+USR-002,2026-02-05,Dining Out - Restaurant,-3200,debit,Food
+USR-002,2026-02-02,Internet Bill,-1200,debit,Utilities
+USR-002,2026-01-31,Gym Membership,-2000,debit,Health
+USR-002,2026-01-28,Online Course Fee,-5000,debit,Education
+USR-002,2026-01-15,Salary Credit,75000,credit,Salary
+USR-003,2026-02-14,Salary Credit,95000,credit,Salary
+USR-003,2026-02-13,Home Loan EMI,-12000,debit,EMI
+USR-003,2026-02-11,Grocery Shopping - Reliance Fresh,-4800,debit,Food
+USR-003,2026-02-09,Insurance Premium,-8500,debit,Insurance
+USR-003,2026-02-07,Stock Investment,-20000,debit,Investment
+USR-003,2026-02-05,Electricity + Water Bill,-3200,debit,Utilities
+USR-003,2026-02-02,Movie Tickets,-1500,debit,Entertainment
+USR-003,2026-01-30,Restaurant Dinner,-2800,debit,Food
+USR-003,2026-01-25,Fuel - Petrol Pump,-3500,debit,Transport
+USR-003,2026-01-15,Salary Credit,95000,credit,Salary
+USR-004,2026-02-14,Freelance Payment,55000,credit,Salary
+USR-004,2026-02-12,Personal Loan EMI - MISSED,-0,debit,EMI
+USR-004,2026-02-10,Grocery Shopping,-4200,debit,Food
+USR-004,2026-02-08,Auto-debit Failed - Insurance,-0,debit,Insurance
+USR-004,2026-02-06,ATM Withdrawal,-8000,debit,Cash
+USR-004,2026-02-04,Credit Card Payment - Partial,-5000,debit,Credit Card
+USR-004,2026-02-01,Electricity Bill - Late Fee,-2800,debit,Utilities
+USR-004,2026-01-28,Online Shopping - Flipkart,-6500,debit,Shopping
+USR-004,2026-01-20,Quick Loan App - MoneyTap,-15000,debit,Lending
+USR-004,2026-01-15,Freelance Payment,55000,credit,Salary
+USR-005,2026-02-14,Salary Credit,62000,credit,Salary
+USR-005,2026-02-13,Rent Payment,-18000,debit,Rent
+USR-005,2026-02-11,Car Loan EMI,-14000,debit,EMI
+USR-005,2026-02-09,Grocery Shopping - DMart,-5200,debit,Food
+USR-005,2026-02-07,Credit Card Bill,-8500,debit,Credit Card
+USR-005,2026-02-05,Mobile Recharge,-599,debit,Utilities
+USR-005,2026-02-03,Weekend Trip - Hotel Booking,-12000,debit,Entertainment
+USR-005,2026-01-31,Health Insurance Premium,-6500,debit,Insurance
+USR-005,2026-01-28,Dining Out,-2500,debit,Food
+USR-005,2026-01-15,Salary Credit,62000,credit,Salary
+USR-006,2026-02-14,Business Income,110000,credit,Salary
+USR-006,2026-02-13,Home Loan EMI,-15000,debit,EMI
+USR-006,2026-02-11,Grocery + Household,-6800,debit,Food
+USR-006,2026-02-09,Gold Investment,-25000,debit,Investment
+USR-006,2026-02-07,School Fees - Children,-12000,debit,Education
+USR-006,2026-02-05,Utilities - All Bills,-4500,debit,Utilities
+USR-006,2026-02-03,Car Maintenance,-8000,debit,Transport
+USR-006,2026-01-31,Life Insurance Premium,-15000,debit,Insurance
+USR-006,2026-01-28,Family Vacation Booking,-35000,debit,Entertainment
+USR-006,2026-01-15,Business Income,110000,credit,Salary
+USR-007,2026-02-14,Salary Credit - Delayed,42000,credit,Salary
+USR-007,2026-02-12,Home Loan EMI - MISSED,-0,debit,EMI
+USR-007,2026-02-11,Personal Loan EMI - MISSED,-0,debit,EMI
+USR-007,2026-02-10,ATM Withdrawal - Emergency,-10000,debit,Cash
+USR-007,2026-02-08,Grocery Shopping,-5500,debit,Food
+USR-007,2026-02-06,Payday Loan - KreditBee,-20000,debit,Lending
+USR-007,2026-02-04,Credit Card Min Payment Only,-2000,debit,Credit Card
+USR-007,2026-02-01,Electricity Bill - Overdue,-3200,debit,Utilities
+USR-007,2026-01-28,Medical Emergency - Loan,-15000,debit,Health
+USR-007,2026-01-15,Salary Credit - 10 Days Late,42000,credit,Salary
+USR-008,2026-02-14,Salary Credit,68000,credit,Salary
+USR-008,2026-02-13,Rent Payment,-22000,debit,Rent
+USR-008,2026-02-11,Car EMI Payment,-16000,debit,EMI
+USR-008,2026-02-09,Grocery Shopping - BigBasket,-4800,debit,Food
+USR-008,2026-02-07,Online Shopping - Myntra,-6500,debit,Shopping
+USR-008,2026-02-05,DTH + Internet Bill,-2200,debit,Utilities
+USR-008,2026-02-03,Dining + Entertainment,-4500,debit,Food
+USR-008,2026-01-31,Gym + Yoga Classes,-3000,debit,Health
+USR-008,2026-01-28,Beauty Salon + Spa,-2500,debit,Personal Care
+USR-008,2026-01-15,Salary Credit,68000,credit,Salary
+USR-009,2026-02-14,Business Profit,125000,credit,Salary
+USR-009,2026-02-13,Luxury Apartment EMI,-18000,debit,EMI
+USR-009,2026-02-11,Premium Groceries - Organic,-8500,debit,Food
+USR-009,2026-02-09,Stock Market Investment,-50000,debit,Investment
+USR-009,2026-02-07,High-end Restaurant,-5500,debit,Food
+USR-009,2026-02-05,Premium Insurance,-12000,debit,Insurance
+USR-009,2026-02-03,Golf Club Membership,-15000,debit,Entertainment
+USR-009,2026-01-31,International Flight Tickets,-85000,debit,Travel
+USR-009,2026-01-28,Luxury Watch Purchase,-45000,debit,Shopping
+USR-009,2026-01-15,Business Profit,125000,credit,Salary
+USR-010,2026-02-14,Salary Credit,52000,credit,Salary
+USR-010,2026-02-12,Two-Wheeler Loan EMI,-8000,debit,EMI
+USR-010,2026-02-11,Personal Loan EMI - Late Payment,-12000,debit,EMI
+USR-010,2026-02-09,Grocery Shopping,-5200,debit,Food
+USR-010,2026-02-07,Mobile Shopping - EMI,-15000,debit,Shopping
+USR-010,2026-02-05,Credit Card Payment - Partial,-4000,debit,Credit Card
+USR-010,2026-02-03,Utility Bills - All,-3500,debit,Utilities
+USR-010,2026-02-01,Quick Loan - PaySense,-10000,debit,Lending
+USR-010,2026-01-29,Online Shopping - COD,-4500,debit,Shopping
+USR-010,2026-01-15,Salary Credit,52000,credit,Salary
+USR-011,2026-02-14,IT Consulting Income,98000,credit,Salary
+USR-011,2026-02-13,Home Loan EMI,-16000,debit,EMI
+USR-011,2026-02-11,Premium Groceries,-6500,debit,Food
+USR-011,2026-02-09,Mutual Fund SIP,-15000,debit,Investment
+USR-011,2026-02-07,Car Fuel + Maintenance,-5500,debit,Transport
+USR-011,2026-02-05,Health Insurance Premium,-8000,debit,Insurance
+USR-011,2026-02-03,Electronics - Laptop Upgrade,-55000,debit,Shopping
+USR-011,2026-01-31,Weekend Getaway - Resort,-18000,debit,Entertainment
+USR-011,2026-01-28,Fine Dining,-4200,debit,Food
+USR-011,2026-01-15,IT Consulting Income,98000,credit,Salary
+USR-012,2026-02-14,Salary Credit,64000,credit,Salary
+USR-012,2026-02-13,Rent Payment,-20000,debit,Rent
+USR-012,2026-02-11,Personal Loan EMI,-11000,debit,EMI
+USR-012,2026-02-09,Grocery Shopping - Supermarket,-5800,debit,Food
+USR-012,2026-02-07,Credit Card Bill,-7500,debit,Credit Card
+USR-012,2026-02-05,Electricity + Gas Bill,-2800,debit,Utilities
+USR-012,2026-02-03,Online Courses - Udemy,-3500,debit,Education
+USR-012,2026-02-01,Gym Membership,-2500,debit,Health
+USR-012,2026-01-29,Movie + Dinner Date,-2200,debit,Entertainment
+USR-012,2026-01-15,Salary Credit,64000,credit,Salary

@@ -1,0 +1,73 @@
+customer_user_id,category,percentage,amount,month
+USR-001,EMI & Loans,35,18200,Jan
+USR-001,Food & Groceries,20,10400,Jan
+USR-001,Utilities,10,5200,Jan
+USR-001,Health,15,7800,Jan
+USR-001,Cash Withdrawals,12,6240,Jan
+USR-001,Others,8,4160,Jan
+USR-002,Rent,37,25200,Feb
+USR-002,EMI & Loans,27,18360,Feb
+USR-002,Food & Groceries,15,10200,Feb
+USR-002,Investment,10,6800,Feb
+USR-002,Utilities,6,4080,Feb
+USR-002,Others,5,3400,Feb
+USR-003,Investment,35,15750,Feb
+USR-003,EMI & Loans,27,12150,Feb
+USR-003,Food & Groceries,18,8100,Feb
+USR-003,Insurance,10,4500,Feb
+USR-003,Utilities,7,3150,Feb
+USR-003,Others,3,1350,Feb
+USR-004,Lending Apps,30,17400,Feb
+USR-004,EMI & Loans,25,14500,Feb
+USR-004,Food & Groceries,18,10440,Feb
+USR-004,Shopping,15,8700,Feb
+USR-004,Utilities,7,4060,Feb
+USR-004,Others,5,2900,Feb
+USR-005,Rent,32,15360,Feb
+USR-005,EMI & Loans,28,13440,Feb
+USR-005,Food & Groceries,16,7680,Feb
+USR-005,Credit Card,14,6720,Feb
+USR-005,Entertainment,6,2880,Feb
+USR-005,Others,4,1920,Feb
+USR-006,Investment,38,15200,Feb
+USR-006,EMI & Loans,25,10000,Feb
+USR-006,Education,15,6000,Feb
+USR-006,Food & Groceries,12,4800,Feb
+USR-006,Insurance,7,2800,Feb
+USR-006,Others,3,1200,Feb
+USR-007,Lending Apps,32,19520,Feb
+USR-007,EMI Defaults,28,17080,Feb
+USR-007,Food & Groceries,18,10980,Feb
+USR-007,Cash Withdrawals,15,9150,Feb
+USR-007,Utilities,5,3050,Feb
+USR-007,Others,2,1220,Feb
+USR-008,Rent,33,17160,Feb
+USR-008,EMI & Loans,28,14560,Feb
+USR-008,Food & Groceries,16,8320,Feb
+USR-008,Shopping,12,6240,Feb
+USR-008,Health,7,3640,Feb
+USR-008,Others,4,2080,Feb
+USR-009,Investment,40,19200,Feb
+USR-009,EMI & Loans,22,10560,Feb
+USR-009,Food & Groceries,15,7200,Feb
+USR-009,Entertainment,13,6240,Feb
+USR-009,Insurance,7,3360,Feb
+USR-009,Others,3,1440,Feb
+USR-010,Lending Apps,28,17640,Feb
+USR-010,EMI & Loans,26,16380,Feb
+USR-010,Shopping,20,12600,Feb
+USR-010,Food & Groceries,14,8820,Feb
+USR-010,Utilities,8,5040,Feb
+USR-010,Others,4,2520,Feb
+USR-011,Investment,32,13440,Feb
+USR-011,EMI & Loans,26,10920,Feb
+USR-011,Shopping,18,7560,Feb
+USR-011,Food & Groceries,14,5880,Feb
+USR-011,Insurance,7,2940,Feb
+USR-011,Others,3,1260,Feb
+USR-012,Rent,30,15000,Feb
+USR-012,EMI & Loans,25,12500,Feb
+USR-012,Food & Groceries,18,9000,Feb
+USR-012,Credit Card,15,7500,Feb
+USR-012,Education,7,3500,Feb
+USR-012,Others,5,2500,Feb
