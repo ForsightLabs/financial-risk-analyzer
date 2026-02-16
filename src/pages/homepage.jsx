@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // ADD THIS IMPORT
+import { useNavigate } from "react-router-dom";
 import "../styles/homepage.css";
 
-// ─────────────────────────────────────────────────────────────────
-// DUMMY DATA — replace with API call when backend is ready
-// Shape matches what your Spring Boot endpoint will return
-// ─────────────────────────────────────────────────────────────────
 const DUMMY_USERS = [
   {
     id: "USR-001",
-    name: "Alex Johnson",
+    name: "Aryan Mehta",
     flag: true,
     reason: "Missed 3 consecutive EMI payments",
     flagType: "Payment Default",
@@ -171,7 +167,6 @@ function Homepage() {
     fetchUsers();
   }, []);
 
-  // ── ADD THIS FUNCTION: Navigate to customer profile ──
   const handleViewCustomer = (customerId) => {
     navigate(`/customer/${customerId}`);
   };

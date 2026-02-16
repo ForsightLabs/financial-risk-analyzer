@@ -20,6 +20,7 @@ import {
   RadialBarChart,
   RadialBar,
 } from "recharts";
+import ALL_USERS_DATA from "../data/usersData"; // Import the data
 
 const CustomerProfile = () => {
   const { customerId } = useParams(); // Get customer ID from URL
@@ -27,159 +28,27 @@ const CustomerProfile = () => {
   const [customerData, setCustomerData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // TODO: Replace with actual API call
-  // const fetchCustomerData = async (id) => {
-  //   try {
-  //     const response = await fetch(`http://localhost:8080/api/customers/${id}`);
-  //     const data = await response.json();
-  //     setCustomerData(data);
-  //     setLoading(false);
-  //   } catch (error) {
-  //     console.error('Error fetching customer data:', error);
-  //     setLoading(false);
-  //   }
-  // };
-
   useEffect(() => {
-    // Simulate API call with mock data
-    // fetchCustomerData(customerId);
+    // Fetch customer data based on customerId from URL
+    const fetchCustomerData = () => {
+      setLoading(true);
 
-    // Mock data for now
-    const mockCustomerData = {
-      profile: {
-        id: customerId || "USR-001",
-        name: "Alex Johnson",
-        photo: null, // Will use placeholder
-        creditScore: 780,
-        creditScoreStatus: "Excellent",
-        status: "Stable",
-        accountNumber: "123456789",
-        email: "alex.johnson@email.com",
-        phone: "+91 98765 43210",
-        dateJoined: "Jan 2020",
-        lastUpdated: "2 hours ago",
-      },
-      financialSummary: {
-        totalAssets: 1200000,
-        totalLiabilities: 450000,
-        totalDebt: 100000,
-        totalFaxCredits: 150000,
-        netWorth: 750000,
-        monthlyIncome: 85000,
-        monthlyExpenses: 45000,
-      },
-      riskAssessment: {
-        riskScore: "Low",
-        riskPercentage: 25,
-        stressLevel: "Low Stress",
-        keyFactors: {
-          behavioralRiskFactors: 30,
-          highRiskEateries: 15,
-          highRiskRepayment: "Low",
-        },
-      },
-      cashFlowData: [
-        { month: "Jan", income: 80000, expenses: 42000 },
-        { month: "Feb", income: 82000, expenses: 45000 },
-        { month: "Mar", income: 85000, expenses: 43000 },
-        { month: "Apr", income: 83000, expenses: 48000 },
-        { month: "May", income: 87000, expenses: 46000 },
-        { month: "Jun", income: 85000, expenses: 45000 },
-      ],
-      liquidityData: [
-        { month: "Jan", amount: 45000 },
-        { month: "Feb", amount: 52000 },
-        { month: "Mar", amount: 78000 },
-        { month: "Apr", amount: 65000 },
-        { month: "May", amount: 72000 },
-        { month: "Jun", amount: 85000 },
-      ],
-      savingsRate: {
-        current: 40,
-        target: 50,
-        emergencyFund: 35,
-      },
-      spendingCategories: [
-        { category: "Earn & Funds", value: 25, color: "#00d4aa" },
-        { category: "Pension Funds", value: 20, color: "#0ea5e9" },
-        { category: "Food", value: 15, color: "#8b5cf6" },
-        { category: "Health", value: 12, color: "#06b6d4" },
-        { category: "Herb", value: 10, color: "#10b981" },
-        { category: "Spending", value: 18, color: "#f59e0b" },
-      ],
-      debtRepayment: [
-        { category: "High Risk Categories", value: 30, color: "#ef4444" },
-        { category: "Debt Repayment", value: 70, color: "#0ea5e9" },
-      ],
-      creditScoreHistory: [
-        { month: "Jan", score: 760 },
-        { month: "Feb", score: 765 },
-        { month: "Mar", score: 770 },
-        { month: "Apr", score: 775 },
-        { month: "May", score: 778 },
-        { month: "Jun", score: 780 },
-      ],
-      paymentHistory: [
-        { month: "Jan", onTime: 95, late: 5 },
-        { month: "Feb", onTime: 98, late: 2 },
-        { month: "Mar", onTime: 100, late: 0 },
-        { month: "Apr", onTime: 97, late: 3 },
-        { month: "May", onTime: 100, late: 0 },
-        { month: "Jun", onTime: 100, late: 0 },
-      ],
-      recentTransactions: [
-        {
-          date: "2026-02-14",
-          description: "Salary Credit",
-          amount: 85000,
-          type: "credit",
-        },
-        {
-          date: "2026-02-12",
-          description: "EMI Payment - Home Loan",
-          amount: -15000,
-          type: "debit",
-        },
-        {
-          date: "2026-02-10",
-          description: "Grocery Shopping",
-          amount: -3500,
-          type: "debit",
-        },
-        {
-          date: "2026-02-08",
-          description: "Investment - Mutual Fund",
-          amount: -10000,
-          type: "debit",
-        },
-        {
-          date: "2026-02-05",
-          description: "Electricity Bill",
-          amount: -2500,
-          type: "debit",
-        },
-      ],
-      alerts: [
-        {
-          type: "success",
-          message: "Credit score improved by 5 points",
-          date: "2 days ago",
-        },
-        {
-          type: "info",
-          message: "Monthly savings target achieved",
-          date: "5 days ago",
-        },
-        {
-          type: "warning",
-          message: "Unusual spending in entertainment category",
-          date: "1 week ago",
-        },
-      ],
+      // Simulate a small delay for loading effect (optional)
+      setTimeout(() => {
+        // Get data from ALL_USERS_DATA object
+        const userData = ALL_USERS_DATA[customerId];
+
+        if (userData) {
+          setCustomerData(userData);
+        } else {
+          setCustomerData(null); // Customer not found
+        }
+
+        setLoading(false);
+      }, 300);
     };
 
-    setCustomerData(mockCustomerData);
-    setLoading(false);
+    fetchCustomerData();
   }, [customerId]);
 
   if (loading) {
@@ -218,6 +87,17 @@ const CustomerProfile = () => {
     recentTransactions,
     alerts,
   } = customerData;
+
+  const handleDownloadReport = () => {
+    // Generate filename from customer name
+    const filename = `${profile.name.replace(/\s+/g, "-").toLowerCase()}-complete-report.pdf`;
+
+    // Create download link
+    const link = document.createElement("a");
+    link.href = `/reports/${filename}`; // Points to public/reports/
+    link.download = filename;
+    link.click();
+  };
 
   return (
     <div className="customer-profile-container">
@@ -295,9 +175,9 @@ const CustomerProfile = () => {
                 </span>
               </div>
               <div className="summary-item">
-                <span className="summary-label">Total Liabilities</span>
+                <span className="summary-label">Net Worth</span>
                 <span className="summary-value">
-                  ₹{(financialSummary.totalLiabilities / 1000).toFixed(0)}K
+                  ₹{(financialSummary.netWorth / 1000).toFixed(0)}K
                 </span>
               </div>
               <div className="summary-item">
@@ -307,9 +187,9 @@ const CustomerProfile = () => {
                 </span>
               </div>
               <div className="summary-item">
-                <span className="summary-label">Total Liabilities</span>
+                <span className="summary-label">Monthly Income</span>
                 <span className="summary-value">
-                  ₹{(financialSummary.totalLiabilities / 1000).toFixed(0)}K
+                  ₹{(financialSummary.monthlyIncome / 1000).toFixed(0)}K
                 </span>
               </div>
               <div className="summary-item">
@@ -363,7 +243,7 @@ const CustomerProfile = () => {
                   <XAxis dataKey="month" stroke="#64748b" />
                   <YAxis
                     stroke="#64748b"
-                    tickFormatter={(value) => `$${value / 1000}K`}
+                    tickFormatter={(value) => `₹${value / 1000}K`}
                   />
                   <Tooltip
                     contentStyle={{
@@ -464,9 +344,9 @@ const CustomerProfile = () => {
                     cy="60"
                     r="50"
                     fill="none"
-                    stroke="#00d4aa"
+                    stroke={savingsRate.current >= 0 ? "#00d4aa" : "#ef4444"}
                     strokeWidth="10"
-                    strokeDasharray={`${(2 * Math.PI * 50 * savingsRate.current) / 100} ${2 * Math.PI * 50}`}
+                    strokeDasharray={`${(2 * Math.PI * 50 * Math.max(0, Math.abs(savingsRate.current))) / 100} ${2 * Math.PI * 50}`}
                     strokeLinecap="round"
                     transform="rotate(-90 60 60)"
                   />
@@ -475,7 +355,7 @@ const CustomerProfile = () => {
                     y="65"
                     textAnchor="middle"
                     fontSize="24"
-                    fill="#00d4aa"
+                    fill={savingsRate.current >= 0 ? "#00d4aa" : "#ef4444"}
                     fontWeight="bold"
                   >
                     {savingsRate.current}%
@@ -674,7 +554,12 @@ const CustomerProfile = () => {
               </div>
             </div>
 
-            <button className="download-report-btn">Download Report</button>
+            <button
+              className="download-report-btn"
+              onClick={handleDownloadReport}
+            >
+              Download Report
+            </button>
           </div>
         </div>
 
@@ -689,7 +574,7 @@ const CustomerProfile = () => {
               <LineChart data={creditScoreHistory}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
                 <XAxis dataKey="month" stroke="#64748b" />
-                <YAxis stroke="#64748b" domain={[750, 800]} />
+                <YAxis stroke="#64748b" domain={["auto", "auto"]} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "#1e293b",
@@ -795,26 +680,29 @@ const CustomerProfile = () => {
         </div>
 
         {/* Alerts Section */}
-        <div className="alerts-section">
-          <div className="section-header">
-            <h3>Recent Alerts</h3>
-          </div>
-          <div className="alerts-list">
-            {alerts.map((alert, index) => (
-              <div key={index} className={`alert-item alert-${alert.type}`}>
-                <div className="alert-icon">
-                  {alert.type === "success" && "✓"}
-                  {alert.type === "warning" && "⚠"}
-                  {alert.type === "info" && "ℹ"}
+        {alerts && alerts.length > 0 && (
+          <div className="alerts-section">
+            <div className="section-header">
+              <h3>Recent Alerts</h3>
+            </div>
+            <div className="alerts-list">
+              {alerts.map((alert, index) => (
+                <div key={index} className={`alert-item alert-${alert.type}`}>
+                  <div className="alert-icon">
+                    {alert.type === "success" && "✓"}
+                    {alert.type === "warning" && "⚠"}
+                    {alert.type === "critical" && "⚠"}
+                    {alert.type === "info" && "ℹ"}
+                  </div>
+                  <div className="alert-content">
+                    <p className="alert-message">{alert.message}</p>
+                    <span className="alert-date">{alert.date}</span>
+                  </div>
                 </div>
-                <div className="alert-content">
-                  <p className="alert-message">{alert.message}</p>
-                  <span className="alert-date">{alert.date}</span>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </main>
     </div>
   );

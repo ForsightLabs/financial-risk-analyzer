@@ -67,8 +67,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .error-container button {
@@ -209,14 +213,29 @@
   right: 0;
 }
 
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
+/* Status badge color variations */
+.status-badge.status-critical {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.status-badge.status-high {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.status-badge.status-medium {
+  background: rgba(234, 179, 8, 0.1);
+  color: #eab308;
+  border: 1px solid rgba(234, 179, 8, 0.3);
+}
+
+.status-badge.status-low {
+  background: rgba(0, 212, 170, 0.1);
+  color: #00d4aa;
+  border: 1px solid rgba(0, 212, 170, 0.3);
 }
 
 .status-badge.status-stable {
@@ -774,11 +793,11 @@
   .profile-top-section {
     grid-template-columns: 1fr;
   }
-  
+
   .profile-middle-section {
     grid-template-columns: 1fr;
   }
-  
+
   .profile-analytics-section {
     grid-template-columns: 1fr;
   }
@@ -788,11 +807,11 @@
   .customer-profile-main {
     padding: 1rem;
   }
-  
+
   .financial-summary-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .circular-indicators {
     flex-direction: column;
     gap: 1.5rem;
