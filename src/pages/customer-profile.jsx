@@ -12,13 +12,8 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
-  PieChart,
-  Pie,
   Cell,
-  RadialBarChart,
-  RadialBar,
 } from "recharts";
 import ALL_USERS_DATA from "../data/usersData"; // Import the data
 
