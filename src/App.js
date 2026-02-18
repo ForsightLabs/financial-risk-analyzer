@@ -5,6 +5,7 @@ import Homepage from "./pages/homepage";
 import Navbar from "./components/navbar";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
+import Reports from "./pages/reports";
 import CustomerProfile from "./pages/customer-profile"; // This is your customer profile page
 
 function App() {
@@ -57,10 +58,10 @@ function App() {
                     }
                   />
                   <Route
-                    path="/report"
+                    path="/reports"
                     element={
                       <div style={{ color: "white", padding: "40px" }}>
-                        Reports
+                        element={<Reports />}
                       </div>
                     }
                   />

@@ -51,7 +51,7 @@ const navTabs = [
   },
   {
     label: "Reports",
-    path: "/report",
+    path: "/reports",
     icon: (
       <svg
         width="16"
