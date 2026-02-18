@@ -120,7 +120,6 @@ const RISK_CONFIG = {
 // REPORTS COMPONENT
 // ─────────────────────────────────────────────────────────────────
 function Reports() {
-  const navigate = useNavigate();
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
