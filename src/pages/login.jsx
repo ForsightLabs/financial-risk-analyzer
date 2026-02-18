@@ -21,7 +21,7 @@ function Login() {
     try {
       // ── Spring Boot API call ──
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/auth/register`,
+        "https://financial-risk-analyzer.onrender.com/api/auth/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
