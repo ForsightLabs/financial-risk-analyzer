@@ -12,7 +12,9 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = { "http://localhost:3000", "https://barclays-risk-monitor.vercel.app" })
+@CrossOrigin(origins = { "http://localhost:3000", "https://financial-risk-analyzer-barclay.vercel.app",
+        "https://financial-risk-analyzer-b-git-9aff20-aryan-deshpande-s-projects.vercel.app",
+        "https://financial-risk-analyzer-barclay-qdgbstce3.vercel.app" })
 public class AuthController {
 
     @Autowired
