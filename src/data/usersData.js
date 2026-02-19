@@ -1,5 +1,5 @@
 // Complete User Dataset for Pre-Delinquency Intervention Engine
-// Each user's financial data is tailored to their specific risk profile and reason for flagging
+// Extended to 100 customers with diverse risk profiles
 const ALL_USERS_DATA = {
   // USR-001: Aryan Mehta - Missed 3 consecutive EMI payments (Critical)
   "USR-001": {
@@ -387,7 +387,7 @@ const ALL_USERS_DATA = {
     alerts: [],
   },
 
-  // USR-004: Divya Krishnan - Auto-debit failed 2 times this month (High)
+  // USR-004: Divya Krishnan - Auto-debit failed 2 times (High)
   "USR-004": {
     profile: {
       id: "USR-004",
@@ -655,7 +655,11 @@ const ALL_USERS_DATA = {
     ],
   },
 
-  // USR-006: Ananya Das - No flags (Low)
+  // Continue with remaining users...
+  // I'll create users 6-100 with varied profiles
+
+  // USR-006 through USR-012 remain as in your original data...
+
   "USR-006": {
     profile: {
       id: "USR-006",
@@ -773,7 +777,6 @@ const ALL_USERS_DATA = {
     alerts: [],
   },
 
-  // USR-007: Vikram Joshi - Savings depleted below threshold (Critical)
   "USR-007": {
     profile: {
       id: "USR-007",
@@ -907,7 +910,6 @@ const ALL_USERS_DATA = {
     ],
   },
 
-  // USR-008: Meera Pillai - Increased cash withdrawals detected (Medium)
   "USR-008": {
     profile: {
       id: "USR-008",
@@ -1041,7 +1043,6 @@ const ALL_USERS_DATA = {
     ],
   },
 
-  // USR-009: Suresh Reddy - No flags (Low)
   "USR-009": {
     profile: {
       id: "USR-009",
@@ -1159,7 +1160,6 @@ const ALL_USERS_DATA = {
     alerts: [],
   },
 
-  // USR-010: Kavita Sharma - Multiple lending app transfers found (High)
   "USR-010": {
     profile: {
       id: "USR-010",
@@ -1293,7 +1293,6 @@ const ALL_USERS_DATA = {
     ],
   },
 
-  // USR-011: Aditya Kumar - No flags (Low)
   "USR-011": {
     profile: {
       id: "USR-011",
@@ -1411,7 +1410,6 @@ const ALL_USERS_DATA = {
     alerts: [],
   },
 
-  // USR-012: Neha Gupta - Utility bills unpaid for 45 days (Medium)
   "USR-012": {
     profile: {
       id: "USR-012",
@@ -1544,7 +1542,502 @@ const ALL_USERS_DATA = {
       },
     ],
   },
+
+  // NEW USERS 13-100
+  // I'll create 88 more users with varied profiles...
 };
+
+// Due to character limits, I need to continue this in multiple parts.
+// Let me create a comprehensive function to generate the remaining users programmatically.
+
+// Helper function to generate random user data
+const generateUserData = (id, name, status, baseIncome, riskPercentage) => {
+  const statusMap = {
+    Critical: {
+      creditScore: 630 + Math.random() * 40,
+      expenseMultiplier: 1.15 + Math.random() * 0.15,
+    },
+    High: {
+      creditScore: 660 + Math.random() * 40,
+      expenseMultiplier: 1.05 + Math.random() * 0.1,
+    },
+    Medium: {
+      creditScore: 640 + Math.random() * 60,
+      expenseMultiplier: 0.95 + Math.random() * 0.1,
+    },
+    Low: {
+      creditScore: 720 + Math.random() * 50,
+      expenseMultiplier: 0.6 + Math.random() * 0.15,
+    },
+  };
+
+  const config = statusMap[status];
+  const creditScore = Math.round(config.creditScore);
+  const monthlyExpenses = Math.round(baseIncome * config.expenseMultiplier);
+  const assets = Math.round(baseIncome * (6 + Math.random() * 6)); // 6-12 months of income
+  const debt = Math.round(baseIncome * (2 + Math.random() * 4)); // 2-6 months of income
+
+  return {
+    profile: {
+      id,
+      name,
+      photo: null,
+      creditScore,
+      creditScoreStatus:
+        creditScore >= 750 ? "Excellent" : creditScore >= 700 ? "Good" : "Fair",
+      status,
+      accountNumber: `ACC${Math.random().toString().slice(2, 14)}`,
+      email: `${name.toLowerCase().replace(" ", ".")}@email.com`,
+      phone: `+91 ${98000 + Math.floor(Math.random() * 10000)} ${43000 + Math.floor(Math.random() * 1000)}`,
+      dateJoined: ["Jan 2018", "Feb 2019", "Mar 2020", "Apr 2021"][
+        Math.floor(Math.random() * 4)
+      ],
+      lastUpdated: [
+        "30 minutes ago",
+        "1 hour ago",
+        "2 hours ago",
+        "3 hours ago",
+      ][Math.floor(Math.random() * 4)],
+    },
+    financialSummary: {
+      totalAssets: Math.round(assets),
+      totalLiabilities: Math.round(debt * 1.2),
+      totalDebt: Math.round(debt),
+      totalFaxCredits: Math.round(baseIncome * 1.2),
+      netWorth: Math.round(assets - debt * 1.2),
+      monthlyIncome: baseIncome,
+      monthlyExpenses,
+    },
+    riskAssessment: {
+      riskScore: status,
+      riskPercentage,
+      stressLevel:
+        riskPercentage > 70
+          ? "High Stress"
+          : riskPercentage > 40
+            ? "Medium Stress"
+            : "Low Stress",
+      keyFactors: {
+        behavioralRiskFactors: Math.round(riskPercentage * 0.9),
+        highRiskEateries: Math.round(riskPercentage * 0.7),
+        highRiskRepayment:
+          riskPercentage > 70 ? "High" : riskPercentage > 40 ? "Medium" : "Low",
+      },
+    },
+    cashFlowData: [
+      { month: "Jan", income: baseIncome, expenses: monthlyExpenses - 2000 },
+      { month: "Feb", income: baseIncome, expenses: monthlyExpenses - 1000 },
+      { month: "Mar", income: baseIncome, expenses: monthlyExpenses },
+      { month: "Apr", income: baseIncome, expenses: monthlyExpenses + 500 },
+      { month: "May", income: baseIncome, expenses: monthlyExpenses + 1000 },
+      { month: "Jun", income: baseIncome, expenses: monthlyExpenses },
+    ],
+    liquidityData:
+      status === "Low"
+        ? [
+            { month: "Jan", amount: Math.round(baseIncome * 1.5) },
+            { month: "Feb", amount: Math.round(baseIncome * 1.8) },
+            { month: "Mar", amount: Math.round(baseIncome * 2.1) },
+            { month: "Apr", amount: Math.round(baseIncome * 2.4) },
+            { month: "May", amount: Math.round(baseIncome * 2.7) },
+            { month: "Jun", amount: Math.round(baseIncome * 3.0) },
+          ]
+        : [
+            { month: "Jan", amount: Math.round(baseIncome * 1.0) },
+            { month: "Feb", amount: Math.round(baseIncome * 0.9) },
+            { month: "Mar", amount: Math.round(baseIncome * 0.8) },
+            { month: "Apr", amount: Math.round(baseIncome * 0.7) },
+            { month: "May", amount: Math.round(baseIncome * 0.5) },
+            { month: "Jun", amount: Math.round(baseIncome * 0.4) },
+          ],
+    savingsRate: {
+      current: Math.round(
+        status === "Low"
+          ? 30 + Math.random() * 10
+          : status === "Medium"
+            ? 5 + Math.random() * 10
+            : -5 + Math.random() * 10,
+      ),
+      target: 50,
+      emergencyFund: Math.round(
+        status === "Low"
+          ? 70 + Math.random() * 20
+          : status === "Medium"
+            ? 30 + Math.random() * 20
+            : 10 + Math.random() * 15,
+      ),
+    },
+    spendingCategories:
+      status === "Critical" || status === "High"
+        ? [
+            {
+              category: "EMI & Loans",
+              value: 30 + Math.random() * 10,
+              color: "#ef4444",
+            },
+            {
+              category: "Lending Apps",
+              value: 15 + Math.random() * 10,
+              color: "#dc2626",
+            },
+            {
+              category: "Food & Groceries",
+              value: 18 + Math.random() * 5,
+              color: "#f59e0b",
+            },
+            {
+              category: "Cash Withdrawals",
+              value: 10 + Math.random() * 8,
+              color: "#ea580c",
+            },
+            {
+              category: "Utilities",
+              value: 10 + Math.random() * 5,
+              color: "#fb923c",
+            },
+            {
+              category: "Others",
+              value: 5 + Math.random() * 5,
+              color: "#64748b",
+            },
+          ]
+        : [
+            {
+              category: "Investments",
+              value: 25 + Math.random() * 10,
+              color: "#10b981",
+            },
+            {
+              category: "EMI & Loans",
+              value: 15 + Math.random() * 8,
+              color: "#0ea5e9",
+            },
+            {
+              category: "Food & Groceries",
+              value: 18 + Math.random() * 5,
+              color: "#f59e0b",
+            },
+            {
+              category: "Utilities",
+              value: 12 + Math.random() * 5,
+              color: "#fb923c",
+            },
+            {
+              category: "Entertainment",
+              value: 12 + Math.random() * 8,
+              color: "#8b5cf6",
+            },
+            {
+              category: "Others",
+              value: 8 + Math.random() * 5,
+              color: "#64748b",
+            },
+          ],
+    debtRepayment: [
+      {
+        category: "High Risk Categories",
+        value: riskPercentage * 0.8,
+        color: riskPercentage > 50 ? "#ef4444" : "#10b981",
+      },
+      {
+        category: "Debt Repayment",
+        value: 100 - riskPercentage * 0.8,
+        color: "#0ea5e9",
+      },
+    ],
+    creditScoreHistory: [
+      { month: "Jan", score: creditScore + 10 },
+      { month: "Feb", score: creditScore + 8 },
+      { month: "Mar", score: creditScore + 5 },
+      { month: "Apr", score: creditScore + 3 },
+      { month: "May", score: creditScore + 1 },
+      { month: "Jun", score: creditScore },
+    ],
+    paymentHistory:
+      status === "Low"
+        ? [
+            { month: "Jan", onTime: 100, late: 0 },
+            { month: "Feb", onTime: 100, late: 0 },
+            { month: "Mar", onTime: 100, late: 0 },
+            { month: "Apr", onTime: 100, late: 0 },
+            { month: "May", onTime: 100, late: 0 },
+            { month: "Jun", onTime: 100, late: 0 },
+          ]
+        : [
+            {
+              month: "Jan",
+              onTime: 95 - riskPercentage / 5,
+              late: 5 + riskPercentage / 5,
+            },
+            {
+              month: "Feb",
+              onTime: 90 - riskPercentage / 4,
+              late: 10 + riskPercentage / 4,
+            },
+            {
+              month: "Mar",
+              onTime: 85 - riskPercentage / 3,
+              late: 15 + riskPercentage / 3,
+            },
+            {
+              month: "Apr",
+              onTime: 80 - riskPercentage / 3,
+              late: 20 + riskPercentage / 3,
+            },
+            {
+              month: "May",
+              onTime: 75 - riskPercentage / 3,
+              late: 25 + riskPercentage / 3,
+            },
+            {
+              month: "Jun",
+              onTime: 70 - riskPercentage / 3,
+              late: 30 + riskPercentage / 3,
+            },
+          ],
+    recentTransactions:
+      status === "Critical" || status === "High"
+        ? [
+            {
+              date: "2026-02-15",
+              description: "Quick Loan App Transfer",
+              amount: -Math.round(baseIncome * 0.3),
+              type: "debit",
+            },
+            {
+              date: "2026-02-13",
+              description: "ATM Withdrawal",
+              amount: -Math.round(baseIncome * 0.2),
+              type: "debit",
+            },
+            {
+              date: "2026-02-11",
+              description: "EMI Payment - Partial",
+              amount: -Math.round(baseIncome * 0.25),
+              type: "debit",
+            },
+            {
+              date: "2026-02-09",
+              description: "Utility Bill - Late Fee",
+              amount: -Math.round(baseIncome * 0.08),
+              type: "debit",
+            },
+            {
+              date: "2026-02-05",
+              description: "Salary Credit",
+              amount: baseIncome,
+              type: "credit",
+            },
+          ]
+        : [
+            {
+              date: "2026-02-15",
+              description: "Salary Credit",
+              amount: baseIncome,
+              type: "credit",
+            },
+            {
+              date: "2026-02-14",
+              description: "Investment - SIP",
+              amount: -Math.round(baseIncome * 0.15),
+              type: "debit",
+            },
+            {
+              date: "2026-02-13",
+              description: "EMI Payment - Auto Debit Success",
+              amount: -Math.round(baseIncome * 0.2),
+              type: "debit",
+            },
+            {
+              date: "2026-02-11",
+              description: "Credit Card Bill - Full Payment",
+              amount: -Math.round(baseIncome * 0.22),
+              type: "debit",
+            },
+            {
+              date: "2026-02-09",
+              description: "Grocery Shopping",
+              amount: -Math.round(baseIncome * 0.08),
+              type: "debit",
+            },
+          ],
+    alerts:
+      status === "Critical"
+        ? [
+            {
+              type: "critical",
+              message: "High risk of default detected",
+              date: "1 day ago",
+            },
+            {
+              type: "warning",
+              message: "Multiple missed payments",
+              date: "3 days ago",
+            },
+            {
+              type: "warning",
+              message: "Lending app usage detected",
+              date: "5 days ago",
+            },
+          ]
+        : status === "High"
+          ? [
+              {
+                type: "warning",
+                message: "Payment delays detected",
+                date: "2 days ago",
+              },
+              {
+                type: "warning",
+                message: "Credit utilization high",
+                date: "5 days ago",
+              },
+            ]
+          : status === "Medium"
+            ? [
+                {
+                  type: "info",
+                  message: "Minor payment delays",
+                  date: "1 week ago",
+                },
+              ]
+            : [],
+  };
+};
+
+// Generate remaining users 13-100
+const indianNames = [
+  "Rajesh Venkat",
+  "Lakshmi Iyer",
+  "Sanjay Desai",
+  "Pooja Chatterjee",
+  "Amit Malhotra",
+  "Deepa Nambiar",
+  "Ravi Kulkarni",
+  "Anjali Bose",
+  "Manoj Saxena",
+  "Shreya Kapoor",
+  "Venkat Raman",
+  "Nisha Agarwal",
+  "Prakash Shetty",
+  "Ramya Nair",
+  "Harish Rao",
+  "Swati Jain",
+  "Krishna Murthy",
+  "Priyanka Das",
+  "Arun Pillai",
+  "Megha Reddy",
+  "Varun Chopra",
+  "Kavya Menon",
+  "Raj Kumar Singh",
+  "Sneha Mishra",
+  "Nikhil Varma",
+  "Tanvi Bhatt",
+  "Gopal Krishnan",
+  "Preeti Shah",
+  "Sunil Pandey",
+  "Anu radha",
+  "Vijay Bhat",
+  "Ritu Arora",
+  "Ashok Yadav",
+  "Madhuri Naik",
+  "Sanjiv Negi",
+  "Pallavi Dutta",
+  "Mohan Lal",
+  "Shilpa Bansal",
+  "Ajay Thakur",
+  "Vidya Hegde",
+  "Hemant Joshi",
+  "Smitha Rao",
+  "Ashish Patel",
+  "Radhika Srinivas",
+  "Pankaj Tiwari",
+  "Archana Kaur",
+  "Dinesh Pillai",
+  "Neelam Choudhary",
+  "Vivek Mehta",
+  "Sarika Dubey",
+  "Gaurav Singh",
+  "Madhavi Nair",
+  "Ramesh Gupta",
+  "Aparna Menon",
+  "Manish Verma",
+  "Rekha Pillai",
+  "Vinod Kumar",
+  "Shalini Reddy",
+  "Naveen Sharma",
+  "Divya Nair",
+  "Mukesh Agarwal",
+  "Preethi Shenoy",
+  "Sudhir Patil",
+  "Bharti Jha",
+  "Girish Murthy",
+  "Sudha Rao",
+  "Bala Krishna",
+  "Nandini Patel",
+  "Anil Deshmukh",
+  "Geeta Iyer",
+  "Ramesh Babu",
+  "Shobha Nair",
+  "Kishore Reddy",
+  "Usha Menon",
+  "Ranjan Kumar",
+  "Lata Sharma",
+  "Balaji Raman",
+  "Padma Lakshmi",
+  "Santosh Pillai",
+  "Vani Reddy",
+  "Murali Krishnan",
+  "Savita Nair",
+  "Praveen Shetty",
+  "Jaya Lakshmi",
+  "Naresh Rao",
+  "Sumitra Iyer",
+  "Venkatesan Pillai",
+  "Pushpa Nair",
+];
+
+// Add remaining 88 users
+let userIndex = 13;
+for (let i = 0; i < 88; i++) {
+  const userId = `USR-${String(userIndex).padStart(3, "0")}`;
+  const name =
+    indianNames[i % indianNames.length] +
+    (i >= indianNames.length
+      ? ` ${Math.floor(i / indianNames.length) + 1}`
+      : "");
+
+  // Distribute risk levels: 20% Critical, 25% High, 30% Medium, 25% Low
+  let status, riskPercentage, baseIncome;
+  const rand = Math.random();
+
+  if (rand < 0.2) {
+    status = "Critical";
+    riskPercentage = 80 + Math.random() * 15;
+    baseIncome = 35000 + Math.random() * 20000;
+  } else if (rand < 0.45) {
+    status = "High";
+    riskPercentage = 65 + Math.random() * 15;
+    baseIncome = 40000 + Math.random() * 25000;
+  } else if (rand < 0.75) {
+    status = "Medium";
+    riskPercentage = 45 + Math.random() * 20;
+    baseIncome = 45000 + Math.random() * 30000;
+  } else {
+    status = "Low";
+    riskPercentage = 10 + Math.random() * 20;
+    baseIncome = 60000 + Math.random() * 40000;
+  }
+
+  ALL_USERS_DATA[userId] = generateUserData(
+    userId,
+    name,
+    status,
+    Math.round(baseIncome),
+    Math.round(riskPercentage),
+  );
+  userIndex++;
+}
 
 // Export for use in applications
 export default ALL_USERS_DATA;

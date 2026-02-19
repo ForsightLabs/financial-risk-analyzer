@@ -1,0 +1,388 @@
+/* ── interventions.css ──────────────────────────────────────────
+   Purely additive iv-* classes only.
+   Zero overrides to any hp-* or other existing class.
+────────────────────────────────────────────────────────────────── */
+
+/* ── Analyst filter select in toolbar ──────────────────────── */
+.iv-analyst-select {
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.18s;
+}
+
+.iv-analyst-select:focus { border-color: var(--accent); }
+
+/* ── Date/time stacked cell ─────────────────────────────────── */
+.iv-datetime {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.iv-time {
+  font-family: "Courier New", monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* ── Risk score pill in table ───────────────────────────────── */
+.iv-score-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.iv-score-pill {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 20px;
+  border: 1px solid;
+  width: fit-content;
+}
+
+.iv-conf {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: "Courier New", monospace;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DETAIL PANEL
+═══════════════════════════════════════════════════════════════ */
+.iv-detail {
+  padding: 20px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: rowIn 0.25s ease both;
+}
+
+/* ── Detail header ──────────────────────────────────────────── */
+.iv-detail__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.iv-detail__header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.iv-detail__id {
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.iv-detail__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+
+.iv-dot { color: var(--text-muted); }
+
+/* ── Close button ───────────────────────────────────────────── */
+.iv-close-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.iv-close-btn:hover {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}
+
+/* ── Customer info strip ────────────────────────────────────── */
+.iv-customer-strip {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 18px;
+  flex-wrap: wrap;
+}
+
+.iv-customer-strip > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.iv-strip-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--text-muted);
+}
+
+.iv-strip-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COMPARISON LAYOUT
+═══════════════════════════════════════════════════════════════ */
+.iv-compare {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  gap: 0;
+  align-items: start;
+}
+
+/* ── Column shared ──────────────────────────────────────────── */
+.iv-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.iv-col--ai     { background: rgba(0, 174, 239, 0.03); border-color: rgba(0, 174, 239, 0.15); }
+.iv-col--analyst{ background: rgba(0, 201, 122, 0.03); border-color: rgba(0, 201, 122, 0.15); }
+
+/* ── Column label row ───────────────────────────────────────── */
+.iv-col__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.2px;
+}
+
+.iv-col__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.iv-col__icon--ai      { background: rgba(0,174,239,0.15); color: var(--accent); }
+.iv-col__icon--analyst { background: rgba(0,201,122,0.15); color: #00c97a; font-size: 14px; }
+
+/* ── Score ring row ─────────────────────────────────────────── */
+.iv-col__score-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.iv-ring { flex-shrink: 0; }
+
+.iv-col__score-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.iv-score-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  min-width: 140px;
+}
+
+.iv-score-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.iv-score-val {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* ── Recommendation box ─────────────────────────────────────── */
+.iv-col__rec {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+}
+
+.iv-col__rec-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--text-muted);
+}
+
+.iv-col__rec-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+}
+
+/* ── Reason text ────────────────────────────────────────────── */
+.iv-col__reason-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--text-muted);
+  margin-bottom: -6px;
+}
+
+.iv-col__reason {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Signal chips ───────────────────────────────────────────── */
+.iv-signals-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--text-muted);
+}
+
+.iv-signals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.iv-signal-chip {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: rgba(0, 174, 239, 0.08);
+  color: #6ec6e8;
+  border: 1px solid rgba(0, 174, 239, 0.18);
+  white-space: nowrap;
+}
+
+/* ── Override notice ────────────────────────────────────────── */
+.iv-override-notice {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: #ff8c00;
+  background: rgba(255, 140, 0, 0.08);
+  border: 1px solid rgba(255, 140, 0, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+}
+
+.iv-override-icon { font-size: 13px; }
+
+/* ── Outcome row at bottom of analyst column ────────────────── */
+.iv-outcome-row {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+/* ── Centre divider ─────────────────────────────────────────── */
+.iv-divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 18px 8px 0;
+}
+
+.iv-divider__line {
+  width: 1px;
+  flex: 1;
+  min-height: 30px;
+  background: var(--border);
+}
+
+.iv-divider__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .iv-compare {
+    grid-template-columns: 1fr;
+  }
+
+  .iv-divider {
+    flex-direction: row;
+    padding: 0;
+  }
+
+  .iv-divider__line {
+    width: auto;
+    height: 1px;
+    flex: 1;
+    min-height: unset;
+  }
+
+  .iv-divider__badge {
+    writing-mode: horizontal-tb;
+    padding: 5px 12px;
+  }
+
+  .iv-customer-strip {
+    gap: 16px;
+  }
+}

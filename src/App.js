@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
+import InterventionsTab from "./pages/InterventionsTab";
 import Homepage from "./pages/homepage";
 import Navbar from "./components/navbar";
 import Login from "./pages/login";
@@ -9,6 +10,7 @@ import Reports from "./pages/reports";
 import CustomerProfile from "./pages/customer-profile"; // This is your customer profile page
 import AlertsTab from "./pages/AlertsTab";
 import SettingsTab from "./pages/SettingsTab";
+import TeamPermissionsTab from "./pages/TeamPermissionsTab";
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -67,14 +69,7 @@ function App() {
                       </div>
                     }
                   />
-                  <Route
-                    path="/interventions"
-                    element={
-                      <div style={{ color: "white", padding: "40px" }}>
-                        Interventions
-                      </div>
-                    }
-                  />
+                  <Route path="/interventions" element={<InterventionsTab />} />
                   <Route path="/alerts" element={<AlertsTab />} />
                   <Route
                     path="/model"
@@ -85,14 +80,7 @@ function App() {
                     }
                   />
                   <Route path="/settings" element={<SettingsTab />} />
-                  <Route
-                    path="/team"
-                    element={
-                      <div style={{ color: "white", padding: "40px" }}>
-                        Team
-                      </div>
-                    }
-                  />
+                  <Route path="/team" element={<TeamPermissionsTab />} />
                 </Routes>
               </div>
             </div>

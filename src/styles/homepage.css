@@ -120,7 +120,7 @@
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  overflow: hidden;
+  overflow: visible; /* ← THIS FIXES IT */
   box-shadow: var(--shadow);
 }
 
@@ -236,9 +236,8 @@
 }
 
 .hp-row {
-  border-bottom: 1px solid var(--border-light);
-  transition: background 0.15s;
-  animation: rowIn 0.3s ease both;
+  position: relative;
+  z-index: 1;
 }
 
 .hp-row:last-child {
@@ -246,9 +245,8 @@
 }
 
 .hp-row:hover {
-  background: var(--bg-row-hover);
+  z-index: 10; /* bring active row above others */
 }
-
 .hp-row.selected {
   background: rgba(0, 174, 239, 0.05);
   border-left: 2px solid var(--accent);

@@ -1,117 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import ALL_USERS_DATA, { getAllUserIds } from "../data/usersData";
 import "../styles/homepage.css";
-
-const DUMMY_USERS = [
-  {
-    id: "USR-001",
-    name: "Aryan Mehta",
-    flag: true,
-    reason: "Missed 3 consecutive EMI payments",
-    flagType: "Payment Default",
-    assignTo: "Rahul Sharma",
-    status: "Critical",
-  },
-  {
-    id: "USR-002",
-    name: "Priya Nair",
-    flag: true,
-    reason: "Salary delayed by 12 days",
-    flagType: "Income Irregularity",
-    assignTo: "Sneha Iyer",
-    status: "High",
-  },
-  {
-    id: "USR-003",
-    name: "Karan Patel",
-    flag: false,
-    reason: "—",
-    flagType: "—",
-    assignTo: "Unassigned",
-    status: "Low",
-  },
-  {
-    id: "USR-004",
-    name: "Divya Krishnan",
-    flag: true,
-    reason: "Auto-debit failed 2 times this month",
-    flagType: "Auto-debit Failure",
-    assignTo: "Amit Verma",
-    status: "High",
-  },
-  {
-    id: "USR-005",
-    name: "Rohit Singh",
-    flag: true,
-    reason: "Credit utilisation above 90%",
-    flagType: "Credit Overuse",
-    assignTo: "Rahul Sharma",
-    status: "Medium",
-  },
-  {
-    id: "USR-006",
-    name: "Ananya Das",
-    flag: false,
-    reason: "—",
-    flagType: "—",
-    assignTo: "Unassigned",
-    status: "Low",
-  },
-  {
-    id: "USR-007",
-    name: "Vikram Joshi",
-    flag: true,
-    reason: "Savings depleted below threshold",
-    flagType: "Savings Depletion",
-    assignTo: "Sneha Iyer",
-    status: "Critical",
-  },
-  {
-    id: "USR-008",
-    name: "Meera Pillai",
-    flag: true,
-    reason: "Increased cash withdrawals detected",
-    flagType: "Behavioural Anomaly",
-    assignTo: "Amit Verma",
-    status: "Medium",
-  },
-  {
-    id: "USR-009",
-    name: "Suresh Reddy",
-    flag: false,
-    reason: "—",
-    flagType: "—",
-    assignTo: "Unassigned",
-    status: "Low",
-  },
-  {
-    id: "USR-010",
-    name: "Kavita Sharma",
-    flag: true,
-    reason: "Multiple lending app transfers found",
-    flagType: "Debt Stacking",
-    assignTo: "Rahul Sharma",
-    status: "High",
-  },
-  {
-    id: "USR-011",
-    name: "Aditya Kumar",
-    flag: false,
-    reason: "—",
-    flagType: "—",
-    assignTo: "Unassigned",
-    status: "Low",
-  },
-  {
-    id: "USR-012",
-    name: "Neha Gupta",
-    flag: true,
-    reason: "Utility bills unpaid for 45 days",
-    flagType: "Bill Default",
-    assignTo: "Sneha Iyer",
-    status: "Medium",
-  },
-];
+import { useAppContext } from "../pages/AppContext";
+import "../styles/homepage.assign.css";
 
 // ─────────────────────────────────────────────────────────────────
 // STATUS CONFIG
@@ -123,11 +15,125 @@ const STATUS_CONFIG = {
   Low: { color: "#00c97a", bg: "rgba(0,201,122,0.1)", dot: "#00c97a" },
 };
 
+// Helper function to generate reason and flag type based on risk profile
+const generateFlagInfo = (userData) => {
+  const { status, riskAssessment, alerts } = userData;
+
+  // If user has alerts, use the first alert message
+  if (alerts && alerts.length > 0) {
+    const alert = alerts[0];
+    return {
+      flag: true,
+      reason: alert.message,
+      flagType: determineFlagType(alert.message, riskAssessment),
+    };
+  }
+
+  // For low-risk users without alerts
+  if (status === "Low") {
+    return {
+      flag: false,
+      reason: "—",
+      flagType: "—",
+    };
+  }
+
+  // For other users, generate based on risk factors
+  if (riskAssessment.riskPercentage >= 80) {
+    return {
+      flag: true,
+      reason: "Multiple risk indicators detected",
+      flagType: "High Risk Behavior",
+    };
+  } else if (riskAssessment.riskPercentage >= 65) {
+    return {
+      flag: true,
+      reason: "Payment performance declining",
+      flagType: "Payment Issues",
+    };
+  } else if (riskAssessment.riskPercentage >= 40) {
+    return {
+      flag: true,
+      reason: "Financial stress indicators present",
+      flagType: "Risk Monitoring",
+    };
+  }
+
+  return {
+    flag: false,
+    reason: "—",
+    flagType: "—",
+  };
+};
+
+// Helper to determine flag type from alert message
+const determineFlagType = (message, riskAssessment) => {
+  const lowerMessage = message.toLowerCase();
+
+  if (lowerMessage.includes("missed") || lowerMessage.includes("emi")) {
+    return "Payment Default";
+  } else if (
+    lowerMessage.includes("salary") ||
+    lowerMessage.includes("income")
+  ) {
+    return "Income Irregularity";
+  } else if (
+    lowerMessage.includes("auto-debit") ||
+    lowerMessage.includes("autodebit")
+  ) {
+    return "Auto-debit Failure";
+  } else if (
+    lowerMessage.includes("credit") &&
+    lowerMessage.includes("utilisation")
+  ) {
+    return "Credit Overuse";
+  } else if (
+    lowerMessage.includes("savings") ||
+    lowerMessage.includes("depleted")
+  ) {
+    return "Savings Depletion";
+  } else if (
+    lowerMessage.includes("withdrawal") ||
+    lowerMessage.includes("cash")
+  ) {
+    return "Behavioural Anomaly";
+  } else if (
+    lowerMessage.includes("lending") ||
+    lowerMessage.includes("loan app")
+  ) {
+    return "Debt Stacking";
+  } else if (
+    lowerMessage.includes("utility") ||
+    lowerMessage.includes("bill")
+  ) {
+    return "Bill Default";
+  } else if (riskAssessment.highRiskEateries > 50) {
+    return "High Risk Spending";
+  } else {
+    return "Risk Monitoring";
+  }
+};
+
+// Helper to assign analyst based on user ID or status
+const assignAnalyst = (userId, status) => {
+  // Distribute users among analysts
+  const analysts = ["Rahul Sharma", "Sneha Iyer", "Amit Verma", "Priya Desai"];
+
+  if (status === "Low") {
+    return "Unassigned";
+  }
+
+  // Simple distribution based on user ID number
+  const userNumber = parseInt(userId.split("-")[1]);
+  return analysts[userNumber % analysts.length];
+};
+
 // ─────────────────────────────────────────────────────────────────
 // HOMEPAGE COMPONENT
 // ─────────────────────────────────────────────────────────────────
 function Homepage() {
-  const navigate = useNavigate(); // ADD THIS HOOK
+  const { customers, employees, assignCustomer } = useAppContext();
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -135,17 +141,19 @@ function Homepage() {
   const [selectedRows, setSelectedRows] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 8;
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const dropdownRef = useRef(null);
 
-  // ── Fetch users (swap dummy data with API call when ready) ──
+  // ── Fetch users from usersData.js ──
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
       try {
         // ── BACKEND INTEGRATION POINT ──────────────────────────
-        // Replace dummy data with real API call:
+        // Replace with real API call when backend is ready:
         //
         // const token = localStorage.getItem("token");
-        // const response = await fetch("http://localhost:8080/api/users", {
+        // const response = await fetch("http://localhost:8080/api/customers", {
         //   headers: { Authorization: `Bearer ${token}` },
         // });
         // if (!response.ok) throw new Error("Failed to fetch");
@@ -156,7 +164,28 @@ function Homepage() {
 
         // Simulate network delay
         await new Promise((res) => setTimeout(res, 600));
-        setUsers(DUMMY_USERS);
+
+        // Transform data from usersData.js to match homepage table format
+        const allUserIds = getAllUserIds();
+        const transformedUsers = allUserIds.map((userId) => {
+          const userData = ALL_USERS_DATA[userId];
+          const flagInfo = generateFlagInfo(userData);
+
+          return {
+            id: userData.profile.id,
+            name: userData.profile.name,
+            flag: flagInfo.flag,
+            reason: flagInfo.reason,
+            flagType: flagInfo.flagType,
+            assignTo: assignAnalyst(
+              userData.profile.id,
+              userData.profile.status,
+            ),
+            status: userData.profile.status,
+          };
+        });
+
+        setUsers(transformedUsers);
       } catch (err) {
         console.error("Failed to load users:", err);
       } finally {
@@ -166,10 +195,38 @@ function Homepage() {
 
     fetchUsers();
   }, []);
+  // Keep local users in sync when context customers change
+  // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+  useEffect(() => {
+    if (!loading) setUsers(customers);
+  }, [customers]);
 
   const handleViewCustomer = (customerId) => {
     navigate(`/customer/${customerId}`);
   };
+  const handleAssign = (userId, analystName) => {
+    setUsers((prev) =>
+      prev.map((user) =>
+        user.id === userId ? { ...user, assignTo: analystName } : user,
+      ),
+    );
+
+    setOpenDropdown(null);
+  };
+  const activeAnalysts = employees.filter(
+    (e) => e.status === "Active" && !e.onLeave,
+  );
 
   // ── Filtering ──
   const filtered = users.filter((u) => {
@@ -425,7 +482,6 @@ function Homepage() {
 
                     <td>
                       <div className="hp-actions">
-                        {/* ── UPDATED: Add onClick handler to navigate ── */}
                         <button
                           className="hp-action-btn hp-view"
                           title="View Profile"
@@ -453,26 +509,74 @@ function Homepage() {
                           </svg>
                           View
                         </button>
-                        <button
-                          className="hp-action-btn hp-assign-btn"
-                          title="Assign Analyst"
+                        {/* ── Assign button — now connected ── */}
+                        <div
+                          className="hp-assign-wrap"
+                          ref={openDropdown === user.id ? dropdownRef : null}
                         >
-                          <svg
-                            width="13"
-                            height="13"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
+                          <button
+                            className="hp-action-btn hp-assign-btn"
+                            title="Assign Analyst"
+                            onClick={() =>
+                              setOpenDropdown((prev) =>
+                                prev === user.id ? null : user.id,
+                              )
+                            }
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                            />
-                          </svg>
-                          Assign
-                        </button>
+                            <svg
+                              width="13"
+                              height="13"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                              />
+                            </svg>
+                            Assign
+                          </button>
+
+                          {/* Dropdown — only shown for this row */}
+                          {openDropdown === user.id && (
+                            <div className="hp-assign-dropdown">
+                              <div className="hp-assign-dropdown__label">
+                                Assign to analyst
+                              </div>
+                              {activeAnalysts.map((emp) => (
+                                <button
+                                  key={emp.id}
+                                  className={`hp-assign-dropdown__item ${user.assignTo === emp.name ? "active" : ""}`}
+                                  onClick={() =>
+                                    handleAssign(user.id, emp.name)
+                                  }
+                                >
+                                  <span className="hp-assign-dropdown__name">
+                                    {emp.name}
+                                  </span>
+                                  <span className="hp-assign-dropdown__role">
+                                    {emp.role}
+                                  </span>
+                                </button>
+                              ))}
+                              {user.assignTo !== "Unassigned" && (
+                                <button
+                                  className="hp-assign-dropdown__item hp-assign-dropdown__unassign"
+                                  onClick={() =>
+                                    handleAssign(user.id, "Unassigned")
+                                  }
+                                >
+                                  <span className="hp-assign-dropdown__name">
+                                    Unassign
+                                  </span>
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </td>
                   </tr>

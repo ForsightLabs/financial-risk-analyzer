@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../styles/alertstab.css";
 
 // ─────────────────────────────────────────────────────────────────
-// DUMMY ALERTS DATA
+// DATA
 // ─────────────────────────────────────────────────────────────────
 const DUMMY_ALERTS = [
   {
@@ -128,22 +128,26 @@ const SEVERITY_CONFIG = {
   Critical: {
     color: "#ff4d4d",
     bg: "rgba(255,77,77,0.1)",
-    border: "rgba(255,77,77,0.25)",
+    border: "rgba(255,77,77,0.28)",
+    stripe: "#ff4d4d",
   },
   High: {
     color: "#ff8c00",
     bg: "rgba(255,140,0,0.1)",
-    border: "rgba(255,140,0,0.25)",
+    border: "rgba(255,140,0,0.28)",
+    stripe: "#ff8c00",
   },
   Medium: {
     color: "#f5c518",
     bg: "rgba(245,197,24,0.1)",
-    border: "rgba(245,197,24,0.25)",
+    border: "rgba(245,197,24,0.28)",
+    stripe: "#f5c518",
   },
   Low: {
     color: "#00c97a",
     bg: "rgba(0,201,122,0.1)",
-    border: "rgba(0,201,122,0.25)",
+    border: "rgba(0,201,122,0.28)",
+    stripe: "#00c97a",
   },
 };
 
@@ -153,25 +157,19 @@ const STATUS_CONFIG = {
   Resolved: { color: "#00c97a", bg: "rgba(0,201,122,0.1)" },
 };
 
-const CHANNEL_ICON = {
-  SMS: "💬",
-  Email: "✉️",
-  Push: "🔔",
-  Call: "📞",
-};
+const CHANNEL_ICON = { SMS: "💬", Email: "✉️", Push: "🔔", Call: "📞" };
 
 // ─────────────────────────────────────────────────────────────────
-// ALERTS TAB COMPONENT
+// COMPONENT
 // ─────────────────────────────────────────────────────────────────
 function AlertsTab() {
   const [alerts, setAlerts] = useState(DUMMY_ALERTS);
   const [search, setSearch] = useState("");
   const [severityFilter, setSeverityFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
   const [expandedAlert, setExpandedAlert] = useState(null);
-  const rowsPerPage = 8;
+  const [currentPage, setCurrentPage] = useState(1);
+  const cardsPerPage = 5;
 
   // ── Stats ──
   const stats = [
@@ -193,13 +191,14 @@ function AlertsTab() {
     },
   ];
 
-  // ── Filtering ──
+  // ── Filter ──
   const filtered = alerts.filter((a) => {
+    const q = search.toLowerCase();
     const matchSearch =
-      a.customerName.toLowerCase().includes(search.toLowerCase()) ||
-      a.id.toLowerCase().includes(search.toLowerCase()) ||
-      a.type.toLowerCase().includes(search.toLowerCase()) ||
-      a.signal.toLowerCase().includes(search.toLowerCase());
+      a.customerName.toLowerCase().includes(q) ||
+      a.id.toLowerCase().includes(q) ||
+      a.type.toLowerCase().includes(q) ||
+      a.signal.toLowerCase().includes(q);
     const matchSeverity =
       severityFilter === "All" || a.severity === severityFilter;
     const matchStatus = statusFilter === "All" || a.status === statusFilter;
@@ -207,28 +206,13 @@ function AlertsTab() {
   });
 
   // ── Pagination ──
-  const totalPages = Math.ceil(filtered.length / rowsPerPage);
+  const totalPages = Math.ceil(filtered.length / cardsPerPage);
   const paginated = filtered.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage,
+    (currentPage - 1) * cardsPerPage,
+    currentPage * cardsPerPage,
   );
 
-  // ── Row selection ──
-  const toggleRow = (id) =>
-    setSelectedRows((prev) =>
-      prev.includes(id) ? prev.filter((r) => r !== id) : [...prev, id],
-    );
-  const toggleAll = () =>
-    selectedRows.length === paginated.length
-      ? setSelectedRows([])
-      : setSelectedRows(paginated.map((a) => a.id));
-
   // ── Actions ──
-  const markRead = (id) =>
-    setAlerts((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, read: true } : a)),
-    );
-
   const resolveAlert = (id) =>
     setAlerts((prev) =>
       prev.map((a) =>
@@ -236,19 +220,12 @@ function AlertsTab() {
       ),
     );
 
-  const markAllRead = () =>
+  const toggleExpand = (id) => {
     setAlerts((prev) =>
-      prev.map((a) => (selectedRows.includes(a.id) ? { ...a, read: true } : a)),
+      prev.map((a) => (a.id === id ? { ...a, read: true } : a)),
     );
-
-  const resolveSelected = () =>
-    setAlerts((prev) =>
-      prev.map((a) =>
-        selectedRows.includes(a.id)
-          ? { ...a, status: "Resolved", read: true }
-          : a,
-      ),
-    );
+    setExpandedAlert((prev) => (prev === id ? null : id));
+  };
 
   return (
     <div className="hp-page">
@@ -282,16 +259,15 @@ function AlertsTab() {
               {s.value}
             </span>
             <span className="hp-stat-label">{s.label}</span>
-            <div className="hp-stat-bar" style={{ background: s.accent }}></div>
+            <div className="hp-stat-bar" style={{ background: s.accent }} />
           </div>
         ))}
       </div>
 
-      {/* ── Table Container ── */}
+      {/* ── Feed Container ── */}
       <div className="hp-table-container">
         {/* ── Toolbar ── */}
         <div className="hp-toolbar">
-          {/* Search */}
           <div className="hp-search-wrap">
             <svg
               className="hp-search-icon"
@@ -310,7 +286,7 @@ function AlertsTab() {
             </svg>
             <input
               className="hp-search"
-              placeholder="Search alerts by name, ID, type..."
+              placeholder="Search by name, ID, signal or type…"
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -319,7 +295,6 @@ function AlertsTab() {
             />
           </div>
 
-          {/* Severity filters */}
           <div className="hp-filters">
             {["All", "Critical", "High", "Medium"].map((s) => (
               <button
@@ -344,7 +319,6 @@ function AlertsTab() {
             ))}
           </div>
 
-          {/* Status filters */}
           <div className="hp-filters">
             {["All", "Open", "In Progress", "Resolved"].map((s) => (
               <button
@@ -369,139 +343,96 @@ function AlertsTab() {
             ))}
           </div>
 
-          <span className="hp-count">
-            Showing {paginated.length} of {filtered.length}
-          </span>
+          <span className="hp-count">{filtered.length} alerts</span>
         </div>
 
-        {/* ── Table ── */}
-        <table className="hp-table">
-          <thead>
-            <tr>
-              <th>
-                <input
-                  type="checkbox"
-                  className="hp-checkbox"
-                  checked={
-                    selectedRows.length === paginated.length &&
-                    paginated.length > 0
-                  }
-                  onChange={toggleAll}
-                />
-              </th>
-              <th>Alert ID</th>
-              <th>Customer</th>
-              <th>Severity</th>
-              <th>Signal</th>
-              <th>Alert Type</th>
-              <th>Channel</th>
-              <th>Triggered</th>
-              <th>Assigned To</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginated.length === 0 ? (
-              <tr>
-                <td colSpan={11} className="hp-empty">
-                  No alerts match your filters.
-                </td>
-              </tr>
-            ) : (
-              paginated.map((alert, idx) => (
-                <React.Fragment key={alert.id}>
-                  <tr
-                    className={`hp-row ${selectedRows.includes(alert.id) ? "selected" : ""} ${!alert.read ? "alt-unread" : ""}`}
-                    style={{ animationDelay: `${idx * 40}ms` }}
-                  >
-                    <td>
-                      <input
-                        type="checkbox"
-                        className="hp-checkbox"
-                        checked={selectedRows.includes(alert.id)}
-                        onChange={() => toggleRow(alert.id)}
-                      />
-                    </td>
+        {/* ── Card Feed ── */}
+        <div className="alt-feed">
+          {paginated.length === 0 ? (
+            <div className="hp-empty">No alerts match your filters.</div>
+          ) : (
+            paginated.map((alert, idx) => {
+              const sev = SEVERITY_CONFIG[alert.severity];
+              const stat = STATUS_CONFIG[alert.status];
+              const isOpen = expandedAlert === alert.id;
 
-                    <td>
-                      <span className="hp-id">{alert.id}</span>
-                      {!alert.read && <span className="alt-unread-dot"></span>}
-                    </td>
+              return (
+                <div
+                  key={alert.id}
+                  className={`alt-card${!alert.read ? " alt-card--unread" : ""}${isOpen ? " alt-card--expanded" : ""}`}
+                  style={{ animationDelay: `${idx * 50}ms` }}
+                >
+                  {/* coloured left stripe */}
+                  <div
+                    className="alt-card__stripe"
+                    style={{ background: sev?.stripe }}
+                  />
 
-                    <td>
-                      <span className="hp-name">{alert.customerName}</span>
-                      <div className="alt-cust-id">{alert.customerId}</div>
-                    </td>
-
-                    <td>
-                      <span
-                        className="hp-flag-badge"
-                        style={{
-                          color: SEVERITY_CONFIG[alert.severity]?.color,
-                          background: SEVERITY_CONFIG[alert.severity]?.bg,
-                          border: `1px solid ${SEVERITY_CONFIG[alert.severity]?.border}`,
-                        }}
-                      >
-                        {alert.severity === "Critical"
-                          ? "⚡"
-                          : alert.severity === "High"
-                            ? "▲"
-                            : "●"}{" "}
-                        {alert.severity}
-                      </span>
-                    </td>
-
-                    <td>
-                      <span className="hp-flagtype">{alert.signal}</span>
-                    </td>
-
-                    <td className="hp-reason" style={{ maxWidth: 180 }}>
-                      {alert.type}
-                    </td>
-
-                    <td>
-                      <span className="alt-channel">
-                        {CHANNEL_ICON[alert.channel]} {alert.channel}
-                      </span>
-                    </td>
-
-                    <td className="alt-time">{alert.triggeredAt}</td>
-
-                    <td className="hp-assign">
-                      <span className="hp-assigned">{alert.assignedTo}</span>
-                    </td>
-
-                    <td>
-                      <span
-                        className="hp-status-badge"
-                        style={{
-                          color: STATUS_CONFIG[alert.status]?.color,
-                          background: STATUS_CONFIG[alert.status]?.bg,
-                        }}
-                      >
+                  <div className="alt-card__body">
+                    {/* ── Row 1: severity + customer + type | status + time + unread pip ── */}
+                    <div className="alt-card__top">
+                      <div className="alt-card__top-left">
                         <span
-                          className="hp-status-dot"
+                          className="hp-flag-badge"
                           style={{
-                            background: STATUS_CONFIG[alert.status]?.color,
+                            color: sev?.color,
+                            background: sev?.bg,
+                            border: `1px solid ${sev?.border}`,
                           }}
-                        ></span>
-                        {alert.status}
-                      </span>
-                    </td>
+                        >
+                          {alert.severity === "Critical"
+                            ? "⚡"
+                            : alert.severity === "High"
+                              ? "▲"
+                              : "●"}
+                          &nbsp;{alert.severity}
+                        </span>
 
-                    <td>
+                        <div className="alt-card__customer">
+                          <span className="hp-name">{alert.customerName}</span>
+                          <span className="alt-cust-id">
+                            {alert.customerId}
+                          </span>
+                        </div>
+
+                        <span className="hp-flagtype">{alert.type}</span>
+                      </div>
+
+                      <div className="alt-card__top-right">
+                        <span
+                          className="hp-status-badge"
+                          style={{ color: stat?.color, background: stat?.bg }}
+                        >
+                          <span
+                            className="hp-status-dot"
+                            style={{ background: stat?.color }}
+                          />
+                          {alert.status}
+                        </span>
+                        <span className="alt-time">{alert.triggeredAt}</span>
+                        {!alert.read && <span className="alt-unread-dot" />}
+                      </div>
+                    </div>
+
+                    {/* ── Row 2: message ── */}
+                    <p className="alt-card__msg">{alert.message}</p>
+
+                    {/* ── Row 3: chips + actions ── */}
+                    <div className="alt-card__footer">
+                      <div className="alt-card__chips">
+                        <span className="alt-chip">
+                          {CHANNEL_ICON[alert.channel]} {alert.channel}
+                        </span>
+                        <span className="alt-chip">📶 {alert.signal}</span>
+                        <span className="alt-chip">👤 {alert.assignedTo}</span>
+                        <span className="alt-chip hp-id">{alert.id}</span>
+                      </div>
                       <div className="hp-actions">
                         <button
                           className="hp-action-btn hp-view"
-                          onClick={() => {
-                            markRead(alert.id);
-                            setExpandedAlert(
-                              expandedAlert === alert.id ? null : alert.id,
-                            );
-                          }}
+                          onClick={() => toggleExpand(alert.id)}
                         >
-                          {expandedAlert === alert.id ? "▲ Hide" : "▼ Detail"}
+                          {isOpen ? "▲ Less" : "▼ Details"}
                         </button>
                         {alert.status !== "Resolved" && (
                           <button
@@ -512,47 +443,77 @@ function AlertsTab() {
                           </button>
                         )}
                       </div>
-                    </td>
-                  </tr>
+                    </div>
 
-                  {/* ── Expanded Detail Row ── */}
-                  {expandedAlert === alert.id && (
-                    <tr className="alt-detail-row">
-                      <td colSpan={11}>
-                        <div className="alt-detail-panel">
-                          <div className="alt-detail-label">
-                            Full Alert Message
-                          </div>
-                          <p className="alt-detail-msg">{alert.message}</p>
-                          <div className="alt-detail-meta">
-                            <span>🕐 Triggered: {alert.triggeredAt}</span>
-                            <span>👤 Analyst: {alert.assignedTo}</span>
-                            <span>📡 Channel: {alert.channel}</span>
-                            <span>🆔 Customer: {alert.customerId}</span>
-                          </div>
+                    {/* ── Expanded detail grid ── */}
+                    {isOpen && (
+                      <div className="alt-expand">
+                        <div className="alt-expand__grid">
+                          {[
+                            {
+                              label: "Alert ID",
+                              value: <span className="hp-id">{alert.id}</span>,
+                            },
+                            {
+                              label: "Customer ID",
+                              value: (
+                                <span className="hp-id">
+                                  {alert.customerId}
+                                </span>
+                              ),
+                            },
+                            {
+                              label: "Triggered At",
+                              value: (
+                                <span
+                                  className="alt-time"
+                                  style={{ fontSize: 12 }}
+                                >
+                                  {alert.triggeredAt}
+                                </span>
+                              ),
+                            },
+                            {
+                              label: "Channel",
+                              value: `${CHANNEL_ICON[alert.channel]} ${alert.channel}`,
+                            },
+                            {
+                              label: "Assigned To",
+                              value: (
+                                <span className="hp-assigned">
+                                  {alert.assignedTo}
+                                </span>
+                              ),
+                            },
+                            {
+                              label: "Signal",
+                              value: (
+                                <span className="hp-flagtype">
+                                  {alert.signal}
+                                </span>
+                              ),
+                            },
+                          ].map(({ label, value }) => (
+                            <div className="alt-expand__item" key={label}>
+                              <span className="alt-expand__label">{label}</span>
+                              <span>{value}</span>
+                            </div>
+                          ))}
                         </div>
-                      </td>
-                    </tr>
-                  )}
-                </React.Fragment>
-              ))
-            )}
-          </tbody>
-        </table>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
 
         {/* ── Footer / Pagination ── */}
         <div className="hp-footer">
-          {selectedRows.length > 0 && (
-            <div className="hp-bulk-actions">
-              <span>{selectedRows.length} selected</span>
-              <button className="hp-bulk-btn" onClick={markAllRead}>
-                Mark Read
-              </button>
-              <button className="hp-bulk-btn" onClick={resolveSelected}>
-                Resolve All
-              </button>
-            </div>
-          )}
+          <span className="hp-count" style={{ marginLeft: 0 }}>
+            Showing {paginated.length} of {filtered.length}
+          </span>
           <div className="hp-pagination">
             <button
               className="hp-page-btn"
