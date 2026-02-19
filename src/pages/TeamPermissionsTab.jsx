@@ -913,7 +913,8 @@ function TeamPermissionsTab() {
   };
 
   // quick stats for header cards
-  const { employees, customers, openCasesByAnalyst } = useAppContext();
+  const { employees, customers } = useAppContext();
+
   const headerStats = [
     { label: "Total Employees", value: employees.length, accent: "#00aeef" },
     {
