@@ -1,125 +1,113 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import ALL_USERS_DATA, { getAllUserIds } from "../data/usersData";
 import "../styles/alertstab.css";
 
 // ─────────────────────────────────────────────────────────────────
-// DATA
+// SAME HELPERS AS homepage.jsx  (copied verbatim so data is consistent)
 // ─────────────────────────────────────────────────────────────────
-const DUMMY_ALERTS = [
-  {
-    id: "ALT-001",
-    customerId: "USR-001",
-    customerName: "Aryan Mehta",
-    type: "Payment Default",
-    severity: "Critical",
-    message:
-      "Missed 3 consecutive EMI payments. Immediate intervention required.",
-    signal: "EMI Miss",
-    triggeredAt: "2025-07-14 09:12",
-    assignedTo: "Rahul Sharma",
-    status: "Open",
-    channel: "SMS",
-    read: false,
-  },
-  {
-    id: "ALT-002",
-    customerId: "USR-002",
-    customerName: "Priya Nair",
-    type: "Income Irregularity",
-    severity: "High",
-    message: "Salary delayed by 12 days. Cash-flow stress pattern detected.",
-    signal: "Salary Delay",
-    triggeredAt: "2025-07-14 08:45",
-    assignedTo: "Sneha Iyer",
-    status: "In Progress",
-    channel: "Email",
-    read: false,
-  },
-  {
-    id: "ALT-003",
-    customerId: "USR-004",
-    customerName: "Divya Krishnan",
-    type: "Auto-debit Failure",
-    severity: "High",
-    message: "Auto-debit failed 2 times this month. Customer notified.",
-    signal: "Auto-debit",
-    triggeredAt: "2025-07-13 17:30",
-    assignedTo: "Amit Verma",
-    status: "Open",
-    channel: "Push",
-    read: true,
-  },
-  {
-    id: "ALT-004",
-    customerId: "USR-007",
-    customerName: "Vikram Joshi",
-    type: "Savings Depletion",
-    severity: "Critical",
-    message:
-      "Savings account balance dropped 78% in 30 days. Threshold breached.",
-    signal: "Savings Drop",
-    triggeredAt: "2025-07-13 14:05",
-    assignedTo: "Sneha Iyer",
-    status: "Resolved",
-    channel: "Call",
-    read: true,
-  },
-  {
-    id: "ALT-005",
-    customerId: "USR-005",
-    customerName: "Rohit Singh",
-    type: "Credit Overuse",
-    severity: "Medium",
-    message: "Credit utilisation above 90% for 14 consecutive days.",
-    signal: "Credit Util.",
-    triggeredAt: "2025-07-13 11:20",
-    assignedTo: "Rahul Sharma",
-    status: "In Progress",
-    channel: "Email",
-    read: false,
-  },
-  {
-    id: "ALT-006",
-    customerId: "USR-010",
-    customerName: "Kavita Sharma",
-    type: "Debt Stacking",
-    severity: "High",
-    message: "Multiple lending app transfers detected. Possible debt spiral.",
-    signal: "Lending Apps",
-    triggeredAt: "2025-07-12 16:55",
-    assignedTo: "Rahul Sharma",
-    status: "Open",
-    channel: "SMS",
-    read: false,
-  },
-  {
-    id: "ALT-007",
-    customerId: "USR-008",
-    customerName: "Meera Pillai",
-    type: "Behavioural Anomaly",
-    severity: "Medium",
-    message: "ATM withdrawals up 220% vs last month. Cash hoarding pattern.",
-    signal: "ATM Surge",
-    triggeredAt: "2025-07-12 10:15",
-    assignedTo: "Amit Verma",
-    status: "Resolved",
-    channel: "Push",
-    read: true,
-  },
-  {
-    id: "ALT-008",
-    customerId: "USR-012",
-    customerName: "Neha Gupta",
-    type: "Bill Default",
-    severity: "Medium",
-    message: "Utility bills unpaid for 45 days. Escalation recommended.",
-    signal: "Utility Bills",
-    triggeredAt: "2025-07-11 09:00",
-    assignedTo: "Sneha Iyer",
-    status: "Open",
-    channel: "Email",
-    read: true,
-  },
-];
+const determineFlagType = (message, riskAssessment) => {
+  const lowerMessage = message.toLowerCase();
+  if (lowerMessage.includes("missed") || lowerMessage.includes("emi"))
+    return "Payment Default";
+  if (lowerMessage.includes("salary") || lowerMessage.includes("income"))
+    return "Income Irregularity";
+  if (lowerMessage.includes("auto-debit") || lowerMessage.includes("autodebit"))
+    return "Auto-debit Failure";
+  if (lowerMessage.includes("credit") && lowerMessage.includes("utilisation"))
+    return "Credit Overuse";
+  if (lowerMessage.includes("savings") || lowerMessage.includes("depleted"))
+    return "Savings Depletion";
+  if (lowerMessage.includes("withdrawal") || lowerMessage.includes("cash"))
+    return "Behavioural Anomaly";
+  if (lowerMessage.includes("lending") || lowerMessage.includes("loan app"))
+    return "Debt Stacking";
+  if (lowerMessage.includes("utility") || lowerMessage.includes("bill"))
+    return "Bill Default";
+  if (riskAssessment?.highRiskEateries > 50) return "High Risk Spending";
+  return "Risk Monitoring";
+};
+
+const assignAnalyst = (userId, status) => {
+  const analysts = ["Rahul Sharma", "Sneha Iyer", "Amit Verma", "Priya Desai"];
+  if (status === "Low") return "Unassigned";
+  const userNumber = parseInt(userId.split("-")[1]);
+  return analysts[userNumber % analysts.length];
+};
+
+// Map alert type → outreach channel
+const channelFromType = (alertType) => {
+  if (alertType === "critical") return "Call";
+  if (alertType === "warning") return "SMS";
+  return "Email";
+};
+
+// Derive alert status from risk percentage
+const alertStatus = (riskPct) => {
+  if (riskPct >= 80) return "Open";
+  if (riskPct >= 60) return "In Progress";
+  return "Open";
+};
+
+// Build flat alert records from ALL_USERS_DATA
+const buildAlerts = () => {
+  const records = [];
+  const allIds = getAllUserIds();
+
+  allIds.forEach((userId) => {
+    const userData = ALL_USERS_DATA[userId];
+    const { profile, riskAssessment, alerts } = userData;
+
+    // Only surface flagged users (Critical / High / Medium with alerts)
+    if (!alerts || alerts.length === 0) return;
+    if (profile.status === "Low") return;
+
+    alerts.forEach((alert, i) => {
+      const flagType = determineFlagType(
+        alert.message,
+        riskAssessment?.keyFactors || {},
+      );
+      const channel = channelFromType(alert.type);
+      const analyst = assignAnalyst(userId, profile.status);
+      const status = alertStatus(riskAssessment?.riskPercentage || 50);
+
+      // Generate a deterministic date string from userId + index
+      const userNum = parseInt(userId.split("-")[1]);
+      const dayOffset = (userNum + i) % 14;
+      const d = new Date("2026-02-19");
+      d.setDate(d.getDate() - dayOffset);
+      const dateStr = d.toISOString().slice(0, 10);
+      const hour = 8 + ((userNum * 3 + i * 7) % 12);
+      const min = ((userNum * 7 + i * 13) % 60).toString().padStart(2, "0");
+      const timeStr = `${dateStr} ${hour}:${min}`;
+
+      records.push({
+        id: `ALT-${userId.split("-")[1]}-${i + 1}`,
+        customerId: userId,
+        customerName: profile.name,
+        type: flagType,
+        severity: profile.status, // Critical / High / Medium
+        message: alert.message,
+        signal: flagType.split(" ")[0], // first word as short signal
+        triggeredAt: timeStr,
+        assignedTo: analyst,
+        status: status,
+        channel: channel,
+        read: i > 0, // first alert unread by default
+      });
+    });
+  });
+
+  // Sort: unread first, then by severity weight, then by date desc
+  const sevWeight = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+  records.sort((a, b) => {
+    if (a.read !== b.read) return a.read ? 1 : -1;
+    if (sevWeight[a.severity] !== sevWeight[b.severity])
+      return sevWeight[a.severity] - sevWeight[b.severity];
+    return b.triggeredAt.localeCompare(a.triggeredAt);
+  });
+
+  return records;
+};
 
 // ─────────────────────────────────────────────────────────────────
 // CONFIG
@@ -163,13 +151,24 @@ const CHANNEL_ICON = { SMS: "💬", Email: "✉️", Push: "🔔", Call: "📞" 
 // COMPONENT
 // ─────────────────────────────────────────────────────────────────
 function AlertsTab() {
-  const [alerts, setAlerts] = useState(DUMMY_ALERTS);
+  const [alerts, setAlerts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [severityFilter, setSeverityFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
   const [expandedAlert, setExpandedAlert] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const cardsPerPage = 5;
+
+  // Build alert records once on mount
+  useEffect(() => {
+    setLoading(true);
+    // simulate brief load so spinner shows
+    setTimeout(() => {
+      setAlerts(buildAlerts());
+      setLoading(false);
+    }, 400);
+  }, []);
 
   // ── Stats ──
   const stats = [
@@ -198,7 +197,8 @@ function AlertsTab() {
       a.customerName.toLowerCase().includes(q) ||
       a.id.toLowerCase().includes(q) ||
       a.type.toLowerCase().includes(q) ||
-      a.signal.toLowerCase().includes(q);
+      a.signal.toLowerCase().includes(q) ||
+      a.assignedTo.toLowerCase().includes(q);
     const matchSeverity =
       severityFilter === "All" || a.severity === severityFilter;
     const matchStatus = statusFilter === "All" || a.status === statusFilter;
@@ -346,200 +346,225 @@ function AlertsTab() {
           <span className="hp-count">{filtered.length} alerts</span>
         </div>
 
-        {/* ── Card Feed ── */}
-        <div className="alt-feed">
-          {paginated.length === 0 ? (
-            <div className="hp-empty">No alerts match your filters.</div>
-          ) : (
-            paginated.map((alert, idx) => {
-              const sev = SEVERITY_CONFIG[alert.severity];
-              const stat = STATUS_CONFIG[alert.status];
-              const isOpen = expandedAlert === alert.id;
+        {/* ── Loading ── */}
+        {loading ? (
+          <div className="hp-loading">
+            <div className="hp-spinner" />
+            <span>Loading alerts…</span>
+          </div>
+        ) : (
+          <>
+            {/* ── Card Feed ── */}
+            <div className="alt-feed">
+              {paginated.length === 0 ? (
+                <div className="hp-empty">No alerts match your filters.</div>
+              ) : (
+                paginated.map((alert, idx) => {
+                  const sev = SEVERITY_CONFIG[alert.severity];
+                  const stat = STATUS_CONFIG[alert.status];
+                  const isOpen = expandedAlert === alert.id;
 
-              return (
-                <div
-                  key={alert.id}
-                  className={`alt-card${!alert.read ? " alt-card--unread" : ""}${isOpen ? " alt-card--expanded" : ""}`}
-                  style={{ animationDelay: `${idx * 50}ms` }}
-                >
-                  {/* coloured left stripe */}
-                  <div
-                    className="alt-card__stripe"
-                    style={{ background: sev?.stripe }}
-                  />
+                  return (
+                    <div
+                      key={alert.id}
+                      className={`alt-card${!alert.read ? " alt-card--unread" : ""}${isOpen ? " alt-card--expanded" : ""}`}
+                      style={{ animationDelay: `${idx * 50}ms` }}
+                    >
+                      {/* coloured left stripe */}
+                      <div
+                        className="alt-card__stripe"
+                        style={{ background: sev?.stripe }}
+                      />
 
-                  <div className="alt-card__body">
-                    {/* ── Row 1: severity + customer + type | status + time + unread pip ── */}
-                    <div className="alt-card__top">
-                      <div className="alt-card__top-left">
-                        <span
-                          className="hp-flag-badge"
-                          style={{
-                            color: sev?.color,
-                            background: sev?.bg,
-                            border: `1px solid ${sev?.border}`,
-                          }}
-                        >
-                          {alert.severity === "Critical"
-                            ? "⚡"
-                            : alert.severity === "High"
-                              ? "▲"
-                              : "●"}
-                          &nbsp;{alert.severity}
-                        </span>
+                      <div className="alt-card__body">
+                        {/* ── Top row ── */}
+                        <div className="alt-card__top">
+                          <div className="alt-card__top-left">
+                            <span
+                              className="hp-flag-badge"
+                              style={{
+                                color: sev?.color,
+                                background: sev?.bg,
+                                border: `1px solid ${sev?.border}`,
+                              }}
+                            >
+                              {alert.severity === "Critical"
+                                ? "⚡"
+                                : alert.severity === "High"
+                                  ? "▲"
+                                  : "●"}
+                              &nbsp;{alert.severity}
+                            </span>
 
-                        <div className="alt-card__customer">
-                          <span className="hp-name">{alert.customerName}</span>
-                          <span className="alt-cust-id">
-                            {alert.customerId}
-                          </span>
+                            <div className="alt-card__customer">
+                              <span className="hp-name">
+                                {alert.customerName}
+                              </span>
+                              <span className="alt-cust-id">
+                                {alert.customerId}
+                              </span>
+                            </div>
+
+                            <span className="hp-flagtype">{alert.type}</span>
+                          </div>
+
+                          <div className="alt-card__top-right">
+                            <span
+                              className="hp-status-badge"
+                              style={{
+                                color: stat?.color,
+                                background: stat?.bg,
+                              }}
+                            >
+                              <span
+                                className="hp-status-dot"
+                                style={{ background: stat?.color }}
+                              />
+                              {alert.status}
+                            </span>
+                            <span className="alt-time">
+                              {alert.triggeredAt}
+                            </span>
+                            {!alert.read && <span className="alt-unread-dot" />}
+                          </div>
                         </div>
 
-                        <span className="hp-flagtype">{alert.type}</span>
-                      </div>
+                        {/* ── Message ── */}
+                        <p className="alt-card__msg">{alert.message}</p>
 
-                      <div className="alt-card__top-right">
-                        <span
-                          className="hp-status-badge"
-                          style={{ color: stat?.color, background: stat?.bg }}
-                        >
-                          <span
-                            className="hp-status-dot"
-                            style={{ background: stat?.color }}
-                          />
-                          {alert.status}
-                        </span>
-                        <span className="alt-time">{alert.triggeredAt}</span>
-                        {!alert.read && <span className="alt-unread-dot" />}
-                      </div>
-                    </div>
+                        {/* ── Meta chips + actions ── */}
+                        <div className="alt-card__footer">
+                          <div className="alt-card__chips">
+                            <span className="alt-chip">
+                              {CHANNEL_ICON[alert.channel]} {alert.channel}
+                            </span>
+                            <span className="alt-chip">📶 {alert.signal}</span>
+                            <span className="alt-chip">
+                              👤 {alert.assignedTo}
+                            </span>
+                            <span className="alt-chip hp-id">{alert.id}</span>
+                          </div>
+                          <div className="hp-actions">
+                            <button
+                              className="hp-action-btn hp-view"
+                              onClick={() => toggleExpand(alert.id)}
+                            >
+                              {isOpen ? "▲ Less" : "▼ Details"}
+                            </button>
+                            {alert.status !== "Resolved" && (
+                              <button
+                                className="hp-action-btn hp-assign-btn"
+                                onClick={() => resolveAlert(alert.id)}
+                              >
+                                ✓ Resolve
+                              </button>
+                            )}
+                          </div>
+                        </div>
 
-                    {/* ── Row 2: message ── */}
-                    <p className="alt-card__msg">{alert.message}</p>
-
-                    {/* ── Row 3: chips + actions ── */}
-                    <div className="alt-card__footer">
-                      <div className="alt-card__chips">
-                        <span className="alt-chip">
-                          {CHANNEL_ICON[alert.channel]} {alert.channel}
-                        </span>
-                        <span className="alt-chip">📶 {alert.signal}</span>
-                        <span className="alt-chip">👤 {alert.assignedTo}</span>
-                        <span className="alt-chip hp-id">{alert.id}</span>
-                      </div>
-                      <div className="hp-actions">
-                        <button
-                          className="hp-action-btn hp-view"
-                          onClick={() => toggleExpand(alert.id)}
-                        >
-                          {isOpen ? "▲ Less" : "▼ Details"}
-                        </button>
-                        {alert.status !== "Resolved" && (
-                          <button
-                            className="hp-action-btn hp-assign-btn"
-                            onClick={() => resolveAlert(alert.id)}
-                          >
-                            ✓ Resolve
-                          </button>
+                        {/* ── Expanded detail grid ── */}
+                        {isOpen && (
+                          <div className="alt-expand">
+                            <div className="alt-expand__grid">
+                              {[
+                                {
+                                  label: "Alert ID",
+                                  value: (
+                                    <span className="hp-id">{alert.id}</span>
+                                  ),
+                                },
+                                {
+                                  label: "Customer ID",
+                                  value: (
+                                    <span className="hp-id">
+                                      {alert.customerId}
+                                    </span>
+                                  ),
+                                },
+                                {
+                                  label: "Triggered At",
+                                  value: (
+                                    <span
+                                      className="alt-time"
+                                      style={{ fontSize: 12 }}
+                                    >
+                                      {alert.triggeredAt}
+                                    </span>
+                                  ),
+                                },
+                                {
+                                  label: "Channel",
+                                  value: `${CHANNEL_ICON[alert.channel]} ${alert.channel}`,
+                                },
+                                {
+                                  label: "Assigned To",
+                                  value: (
+                                    <span className="hp-assigned">
+                                      {alert.assignedTo}
+                                    </span>
+                                  ),
+                                },
+                                {
+                                  label: "Signal",
+                                  value: (
+                                    <span className="hp-flagtype">
+                                      {alert.signal}
+                                    </span>
+                                  ),
+                                },
+                              ].map(({ label, value }) => (
+                                <div className="alt-expand__item" key={label}>
+                                  <span className="alt-expand__label">
+                                    {label}
+                                  </span>
+                                  <span>{value}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
                         )}
                       </div>
                     </div>
+                  );
+                })
+              )}
+            </div>
 
-                    {/* ── Expanded detail grid ── */}
-                    {isOpen && (
-                      <div className="alt-expand">
-                        <div className="alt-expand__grid">
-                          {[
-                            {
-                              label: "Alert ID",
-                              value: <span className="hp-id">{alert.id}</span>,
-                            },
-                            {
-                              label: "Customer ID",
-                              value: (
-                                <span className="hp-id">
-                                  {alert.customerId}
-                                </span>
-                              ),
-                            },
-                            {
-                              label: "Triggered At",
-                              value: (
-                                <span
-                                  className="alt-time"
-                                  style={{ fontSize: 12 }}
-                                >
-                                  {alert.triggeredAt}
-                                </span>
-                              ),
-                            },
-                            {
-                              label: "Channel",
-                              value: `${CHANNEL_ICON[alert.channel]} ${alert.channel}`,
-                            },
-                            {
-                              label: "Assigned To",
-                              value: (
-                                <span className="hp-assigned">
-                                  {alert.assignedTo}
-                                </span>
-                              ),
-                            },
-                            {
-                              label: "Signal",
-                              value: (
-                                <span className="hp-flagtype">
-                                  {alert.signal}
-                                </span>
-                              ),
-                            },
-                          ].map(({ label, value }) => (
-                            <div className="alt-expand__item" key={label}>
-                              <span className="alt-expand__label">{label}</span>
-                              <span>{value}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
-
-        {/* ── Footer / Pagination ── */}
-        <div className="hp-footer">
-          <span className="hp-count" style={{ marginLeft: 0 }}>
-            Showing {paginated.length} of {filtered.length}
-          </span>
-          <div className="hp-pagination">
-            <button
-              className="hp-page-btn"
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((p) => p - 1)}
-            >
-              ← Prev
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-              <button
-                key={p}
-                className={`hp-page-btn ${currentPage === p ? "active" : ""}`}
-                onClick={() => setCurrentPage(p)}
-              >
-                {p}
-              </button>
-            ))}
-            <button
-              className="hp-page-btn"
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((p) => p + 1)}
-            >
-              Next →
-            </button>
-          </div>
-        </div>
+            {/* ── Footer / Pagination ── */}
+            <div className="hp-footer">
+              <span className="hp-count" style={{ marginLeft: 0 }}>
+                Showing {paginated.length} of {filtered.length}
+              </span>
+              <div className="hp-pagination">
+                <button
+                  className="hp-page-btn"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((p) => p - 1)}
+                >
+                  ← Prev
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (p) => (
+                    <button
+                      key={p}
+                      className={`hp-page-btn ${currentPage === p ? "active" : ""}`}
+                      onClick={() => setCurrentPage(p)}
+                    >
+                      {p}
+                    </button>
+                  ),
+                )}
+                <button
+                  className="hp-page-btn"
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((p) => p + 1)}
+                >
+                  Next →
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
