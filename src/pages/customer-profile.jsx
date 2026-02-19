@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/customer-profile.css";
+import html2canvas from "html2canvas";
 import {
   LineChart,
   Line,
@@ -15,7 +16,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import ALL_USERS_DATA from "../data/usersData"; // Import the data
+import ALL_USERS_DATA from "../data/usersData.js"; // Import the data
 
 const CustomerProfile = () => {
   const { customerId } = useParams(); // Get customer ID from URL
@@ -83,15 +84,77 @@ const CustomerProfile = () => {
     alerts,
   } = customerData;
 
-  const handleDownloadReport = () => {
-    // Generate filename from customer name
-    const filename = `${profile.name.replace(/\s+/g, "-").toLowerCase()}-complete-report.pdf`;
+  const handleDownloadReport = async (event) => {
+    let button = null;
 
-    // Create download link
-    const link = document.createElement("a");
-    link.href = `/reports/${filename}`; // Points to public/reports/
-    link.download = filename;
-    link.click();
+    try {
+      button = event.target;
+      button.disabled = true;
+      button.textContent = "Generating...";
+
+      // Step 1: Capture all charts as images
+      const cashFlowElement = document.querySelector(
+        ".cash-flow-card .chart-container",
+      );
+      const creditScoreElement = document.querySelector(
+        ".analytics-card:nth-child(1) .recharts-wrapper",
+      );
+      const paymentHistoryElement = document.querySelector(
+        ".analytics-card:nth-child(2) .recharts-wrapper",
+      );
+      const liquidityElement = document.querySelector(
+        ".liquidity-card .recharts-wrapper",
+      );
+
+      const cashFlowCanvas = await html2canvas(cashFlowElement);
+      const creditScoreCanvas = await html2canvas(creditScoreElement);
+      const paymentHistoryCanvas = await html2canvas(paymentHistoryElement);
+      const liquidityCanvas = await html2canvas(liquidityElement);
+
+      const charts = {
+        cashFlow: cashFlowCanvas.toDataURL("image/png"),
+        creditScore: creditScoreCanvas.toDataURL("image/png"),
+        paymentHistory: paymentHistoryCanvas.toDataURL("image/png"),
+        liquidity: liquidityCanvas.toDataURL("image/png"),
+      };
+
+      // Step 2: Send customer data + charts to backend
+      const response = await fetch(
+        "https://financial-risk-analyzer.onrender.com/api/reports/generate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            customerId: profile.id,
+            customerData: customerData,
+            charts: charts,
+          }),
+        },
+      );
+
+      if (!response.ok) throw new Error("PDF generation failed");
+
+      // Step 3: Download the PDF
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${profile.name.replace(/\s+/g, "-").toLowerCase()}-report.pdf`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Failed to generate report:", error);
+      alert("Failed to generate report. Please try again.");
+    } finally {
+      // Reset button in finally block - runs whether success or error
+      if (button) {
+        button.disabled = false;
+        button.textContent = "Download Report";
+      }
+    }
   };
 
   return (

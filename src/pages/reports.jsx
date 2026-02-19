@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import ALL_USERS_DATA from "../data/usersData.js";
 import "../styles/reports.css";
 
 // ─────────────────────────────────────────────────────────────────
@@ -213,15 +213,75 @@ function Reports() {
   const reportTypes = ["All", ...new Set(reports.map((r) => r.type))];
 
   // ── Handle download ──
-  const handleDownload = (reportId) => {
-    console.log(`Downloading report: ${reportId}`);
-    // Implement actual download logic
-    alert(`Downloading report ${reportId}...`);
+  const handleDownload = async (reportId) => {
+    try {
+      const response = await fetch(
+        `https://financial-risk-analyzer.onrender.com/api/reports/download/${reportId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+
+      if (!response.ok) throw new Error("Download failed");
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `report-${reportId}.pdf`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Download failed:", error);
+      alert("Download failed. Please try again.");
+    }
   };
 
   // ── Handle generate new report ──
-  const handleGenerateReport = () => {
-    alert("Generate new report - functionality to be implemented");
+  const handleGenerateReport = async () => {
+    try {
+      // Filter critical and high-risk customers
+      const criticalCustomers = Object.values(ALL_USERS_DATA)
+        .filter(
+          (user) =>
+            user.profile.status === "Critical" ||
+            user.profile.status === "High",
+        )
+        .map((user) => user.profile.id);
+
+      const response = await fetch(
+        "https://financial-risk-analyzer.onrender.com/api/reports/bulk-generate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            customerIds: criticalCustomers,
+            reportType: "Critical Customers Weekly Report",
+            generatedBy: localStorage.getItem("user")
+              ? JSON.parse(localStorage.getItem("user")).firstName
+              : "Analyst",
+          }),
+        },
+      );
+
+      if (!response.ok) throw new Error("Bulk report generation failed");
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `critical-customers-report-${new Date().toISOString().split("T")[0]}.pdf`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Failed to generate bulk report:", error);
+      alert("Failed to generate report. Please try again.");
+    }
   };
 
   return (
