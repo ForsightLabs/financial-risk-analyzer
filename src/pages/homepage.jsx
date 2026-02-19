@@ -132,7 +132,8 @@ const assignAnalyst = (userId, status) => {
 // HOMEPAGE COMPONENT
 // ─────────────────────────────────────────────────────────────────
 function Homepage() {
-  const { customers, employees, assignCustomer } = useAppContext();
+  const { customers, employees } = useAppContext();
+
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -209,7 +210,7 @@ function Homepage() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
   useEffect(() => {
-    if (!loading) setUsers(customers);
+    setUsers(customers);
   }, [customers]);
 
   const handleViewCustomer = (customerId) => {
