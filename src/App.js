@@ -7,6 +7,8 @@ import Login from "./pages/login";
 import Signup from "./pages/signup";
 import Reports from "./pages/reports";
 import CustomerProfile from "./pages/customer-profile"; // This is your customer profile page
+import AlertsTab from "./pages/AlertsTab";
+import SettingsTab from "./pages/SettingsTab";
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -73,14 +75,7 @@ function App() {
                       </div>
                     }
                   />
-                  <Route
-                    path="/alerts"
-                    element={
-                      <div style={{ color: "white", padding: "40px" }}>
-                        Alerts
-                      </div>
-                    }
-                  />
+                  <Route path="/alerts" element={<AlertsTab />} />
                   <Route
                     path="/model"
                     element={
@@ -89,14 +84,7 @@ function App() {
                       </div>
                     }
                   />
-                  <Route
-                    path="/settings"
-                    element={
-                      <div style={{ color: "white", padding: "40px" }}>
-                        Settings
-                      </div>
-                    }
-                  />
+                  <Route path="/settings" element={<SettingsTab />} />
                   <Route
                     path="/team"
                     element={

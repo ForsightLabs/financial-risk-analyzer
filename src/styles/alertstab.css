@@ -1,0 +1,95 @@
+/* ── alertstab.css ─────────────────────────────────────────────
+   Uses the same CSS variables as homepage.css — no overrides.
+   Only new, additive classes are defined here.
+───────────────────────────────────────────────────────────────── */
+
+/* ── Unread row highlight ───────────────────────────────────── */
+.hp-row.alt-unread {
+  border-left: 2px solid var(--accent);
+  background: rgba(0, 174, 239, 0.03);
+}
+
+/* ── Unread indicator dot next to alert ID ─────────────────── */
+.alt-unread-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin-left: 6px;
+  vertical-align: middle;
+  animation: pulse 2s infinite;
+}
+
+/* ── Customer sub-ID under name ────────────────────────────── */
+.alt-cust-id {
+  font-family: "Courier New", monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  letter-spacing: 0.4px;
+}
+
+/* ── Channel pill ──────────────────────────────────────────── */
+.alt-channel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* ── Timestamp ─────────────────────────────────────────────── */
+.alt-time {
+  font-size: 11px !important;
+  color: var(--text-muted) !important;
+  white-space: nowrap;
+  font-family: "Courier New", monospace;
+}
+
+/* ── Expanded detail row ────────────────────────────────────── */
+.alt-detail-row td {
+  padding: 0 !important;
+}
+
+.alt-detail-panel {
+  background: var(--bg-base);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 24px 18px 24px;
+  animation: rowIn 0.25s ease both;
+}
+
+.alt-detail-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.alt-detail-msg {
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin: 0 0 12px 0;
+}
+
+.alt-detail-meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.alt-detail-meta span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
